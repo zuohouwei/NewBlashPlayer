@@ -139,7 +139,13 @@ fastlane/readme.md
 # add build deps ignore
 NBMediaPlayer/deps/iOS/*
 NBMediaPlayer/deps/Android/*
+NBMediaPlayer/deps/Ubuntu/*
 # except
 !NBMediaPlayer/deps/iOS/*.sh
 !NBMediaPlayer/deps/Android/*.sh
 !NBMediaPlayer/deps/Android/*.cmake
+!NBMediaPlayer/deps/Ubuntu/*.sh
+
+# ignore clion generated
+cmake-build-debug
+cmake-build-release
