@@ -155,8 +155,15 @@ bool NBFFmpegVDecoder::openVideoCodecContext(AVCodecParameters* codecpar) {
     if (mVCodecCxt->codec_type == AVMEDIA_TYPE_VIDEO)
         av_dict_set(&opts, "refcounted_frames", "1", 0);
     if ((ret = avcodec_open2(mVCodecCxt, codec, &opts)) < 0) {
+        if (opts != NULL) {
+            av_dict_free(&opts);
+        }
         return false;
     }
+    if (opts != NULL) {
+        av_dict_free(&opts);
+    }
+    
     if ((t = av_dict_get(opts, "", NULL, AV_DICT_IGNORE_SUFFIX))) {
         printf("Option %s not found.\n", t->key);
         ret =  AVERROR_OPTION_NOT_FOUND;

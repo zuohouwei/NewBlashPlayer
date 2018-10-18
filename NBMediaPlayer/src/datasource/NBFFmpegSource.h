@@ -8,6 +8,7 @@
 #include "NBDataSource.h"
 
 struct AVFormatContext;
+struct AVIOContext;
 
 class NBFFmpegSource : public NBDataSource {
 public:
@@ -32,6 +33,7 @@ public:
 
 private:
     const NBString& mUri;
+    AVIOContext* mIOCtx;
     AVFormatContext* mFormatCtx;
 
 private:

@@ -490,7 +490,7 @@ CMFormatDescriptionRef NBVideoToolboxDecoder::CreateFormatDescriptionFromCodecDa
     DictSetI32(par, CFSTR ("VerticalSpacing"), 0);
     
     /* SampleDescriptionExtensionAtoms dict */
-    CFDataRef data;
+    CFDataRef data = NULL;
     switch (codec_type) {
         case kCMVideoCodecType_MPEG4Video :
             data = videotoolbox_esds_extradata_create(codecCtx);
@@ -513,7 +513,8 @@ CMFormatDescriptionRef NBVideoToolboxDecoder::CreateFormatDescriptionFromCodecDa
         default:
             break;
     }
-    CFRelease(data);
+    if (data != NULL)
+        CFRelease(data);
     
 //    //    data = CFDataCreate(NULL, value, (CFIndex)length);
 //    data = ff_videotoolbox_avcc_extradata_create(codecCtx);
@@ -655,6 +656,9 @@ nb_status_t NBVideoToolboxDecoder::start(NBMetaData *params) {
     OSStatus status =  VTDecompressionSessionCreate(NULL, mFormatDescription, NULL,
                                                     destinationImageBufferAttributes,
                                                     &callBackRecord, &mDecompressSession);
+
+    CFRelease(destinationImageBufferAttributes);
+    
     NBLOG_DEBUG(LOG_TAG, "Video Decompress session create: %s\n", (status == noErr) ? "Success" : "Failed");
     
     mDecodedFrame = av_frame_alloc();
@@ -694,11 +698,32 @@ nb_status_t NBVideoToolboxDecoder::stop() {
     if (mDecodedFrame != NULL)
         av_frame_free(&mDecodedFrame);
     
-    if (mDecompressSession != NULL)
-        VTDecompressionSessionInvalidate(mDecompressSession);
-    
     if (mFormatDescription != NULL)
         CFRelease(mFormatDescription);
+    
+    if (mDecompressSession != NULL) {
+        VTDecompressionSessionInvalidate(mDecompressSession);
+        CFRelease(mDecompressSession);
+    }
+    
+    if (mHWAccelCtx != NULL) {
+        switch (mHWAccelCtx->cm_codec_type) {
+            case kCMVideoCodecType_H264:
+                ff_h264_ps_uninit(&mHWAccelCtx->h264ps);
+                break;
+            case kCMVideoCodecType_HEVC:
+                ff_hevc_ps_uninit(&mHWAccelCtx->hevcps);
+                break;
+            default:
+                break;
+        }
+        delete mHWAccelCtx;
+        mHWAccelCtx = NULL;
+    }
+    
+    if (mVCodecCxt != NULL) {
+        avcodec_free_context(&mVCodecCxt);
+    }
     
     return OK;
 }

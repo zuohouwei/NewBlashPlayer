@@ -93,9 +93,18 @@ nb_status_t NBFFmpegExtractor::sniffMedia() {
                                        mDataSource->getUri().string(),
                                        NULL,
                                        &openDict))) {
+        
+        if (openDict != NULL) {
+            av_dict_free(&openDict);
+        }
+        
         char errbuf[AV_ERROR_MAX_STRING_SIZE] = { 0 };
         NBLOG_ERROR(LOG_TAG, "The error string is is : %s", av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE, rc));
         return UNKNOWN_ERROR;
+    }
+    
+    if (openDict != NULL) {
+        av_dict_free(&openDict);
     }
 
     if ((rc = avformat_find_stream_info(mFormatContext, NULL)) < 0) {

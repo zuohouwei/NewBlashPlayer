@@ -56,6 +56,10 @@ private:
     return self;
 }
 
+- (void)dealloc {
+    NBLOG_DEINIT();
+}
+
 - (void)setDataSource:(NSURL*)uri params:(NSDictionary*)params {
     mp->setDataSource([[uri absoluteString] UTF8String], NULL);
 }

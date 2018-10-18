@@ -32,12 +32,17 @@ extern AVHWAccel ff_mpeg4_videotoolbox_hwaccel;
 
 NBFFmpegSource::NBFFmpegSource(const NBString& uri)
     :mUri(uri)
-    ,mFormatCtx(NULL) {
+    ,mFormatCtx(NULL)
+    ,mIOCtx(NULL) {
 
 }
 
 NBFFmpegSource::~NBFFmpegSource() {
     NBLOG_INFO(LOG_TAG, "FFmpeg data source closing : %p", mFormatCtx);
+    if (mIOCtx != NULL) {
+        avio_closep(&mIOCtx);
+    }
+    
     if (mFormatCtx != NULL) {
         avformat_close_input(&mFormatCtx);
     }
@@ -90,14 +95,13 @@ nb_status_t NBFFmpegSource::initCheck(const NBMap<NBString, NBString>* params) {
         //do something with params
     }
     
-    AVIOContext* ioCtx = NULL;
     AVIOInterruptCB interrupt_callback = {
         .callback = CheckUserInterupted,
         .opaque = (void*)this,
     };
     
     if (strncmp(mUri.string(), "rtsp://", 7) != 0) {
-        if ((rc = avio_open2(&ioCtx, mUri.string(), AVIO_FLAG_READ, &interrupt_callback, &openDict))) {
+        if ((rc = avio_open2(&mIOCtx, mUri.string(), AVIO_FLAG_READ, &interrupt_callback, &openDict))) {
             char errbuf[AV_ERROR_MAX_STRING_SIZE] = { 0 };
             NBLOG_ERROR(LOG_TAG, "The error string is is : %s", av_make_error_string(errbuf, AV_ERROR_MAX_STRING_SIZE, rc));
             return UNKNOWN_ERROR;
@@ -105,7 +109,7 @@ nb_status_t NBFFmpegSource::initCheck(const NBMap<NBString, NBString>* params) {
     }
     
     mFormatCtx = avformat_alloc_context();
-    mFormatCtx->pb = ioCtx;
+    mFormatCtx->pb = mIOCtx;
     mFormatCtx->interrupt_callback = interrupt_callback;
     
     return rc;

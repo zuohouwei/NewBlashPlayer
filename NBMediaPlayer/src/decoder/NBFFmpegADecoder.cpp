@@ -68,7 +68,7 @@ nb_status_t NBFFmpegADecoder::start(NBMetaData *params) {
 }
 
 bool NBFFmpegADecoder::openAudioCodecContext(AVCodecParameters* codecpar) {
-    AVDictionary* pOpenDict = NULL;
+    AVDictionary* opts = NULL;
 
     mACodecCtx = avcodec_alloc_context3(NULL);
     if (mACodecCtx == NULL) {
@@ -81,12 +81,17 @@ bool NBFFmpegADecoder::openAudioCodecContext(AVCodecParameters* codecpar) {
     av_codec_set_pkt_timebase(mACodecCtx, mAStream->time_base);
 
     AVCodec* codec = avcodec_find_decoder(codecpar->codec_id);
-    av_dict_set(&pOpenDict, "refcounted_frames", "1", 0);
-    if (!codec || (avcodec_open2(mACodecCtx, codec, &pOpenDict) < 0)) {
+    av_dict_set(&opts, "refcounted_frames", "1", 0);
+    if (!codec || (avcodec_open2(mACodecCtx, codec, &opts) < 0)) {
+        if (opts != NULL) {
+            av_dict_free(&opts);
+        }
         avcodec_free_context(&mACodecCtx);
         return false;
     }
-
+    if (opts != NULL) {
+        av_dict_free(&opts);
+    }
     return true;
 }
 
