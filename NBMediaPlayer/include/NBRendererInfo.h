@@ -10,6 +10,7 @@
 #ifdef BUILD_TARGET_LINUX64
 #include <X11/Xlib.h>
 typedef struct NBRendererTarget {
+    void* params;
    ::Display* display;
    int screen;
    ::Window window;

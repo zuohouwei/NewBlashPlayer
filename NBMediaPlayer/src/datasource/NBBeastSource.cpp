@@ -80,7 +80,9 @@ int NBBeastSource::BeastReadPacket(void *opaque, uint8_t *buf, int buf_size) {
         }
         
         if (c->error) {
-            NBLOG_ERROR(LOG_TAG, "beast_read error: %s(%d)", av_err2str(c->error), c->error);
+            char errorMsg[AV_ERROR_MAX_STRING_SIZE] = {0};
+            av_make_error_string(errorMsg, AV_ERROR_MAX_STRING_SIZE, c->error);
+            NBLOG_ERROR(LOG_TAG, "beast_read error: %s(%d)", errorMsg, c->error);
             return c->error;
         }
         
@@ -237,7 +239,9 @@ nb_status_t NBBeastSource::initCheck(const NBMap<NBString, NBString>* params) {
         }
         
         if (error) {
-            NBLOG_ERROR(LOG_TAG, "beast_open error: %s(%d)", av_err2str(error), error);
+            char errorMsg[AV_ERROR_MAX_STRING_SIZE] = {0};
+            av_make_error_string(errorMsg, AV_ERROR_MAX_STRING_SIZE, error);
+            NBLOG_ERROR(LOG_TAG, "beast_read error: %s(%d)", errorMsg, error);
             return error;
         }
         
@@ -265,7 +269,9 @@ nb_status_t NBBeastSource::initCheck(const NBMap<NBString, NBString>* params) {
         }
         
         if (error) {
-            NBLOG_INFO(LOG_TAG, "beast_open error: %s(%d)", av_err2str(error), error);
+            char errorMsg[AV_ERROR_MAX_STRING_SIZE] = {0};
+            av_make_error_string(errorMsg, AV_ERROR_MAX_STRING_SIZE, error);
+            NBLOG_ERROR(LOG_TAG, "beast_read error: %s(%d)", errorMsg, error);
             return error;
         }
         

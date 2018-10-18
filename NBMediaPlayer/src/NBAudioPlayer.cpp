@@ -68,11 +68,7 @@ NBAudioPlayer::NBAudioPlayer(NBMediaPlayer* mediaPlayer, NBClockManager* clkMana
 }
 
 NBAudioPlayer::~NBAudioPlayer() {
-    if (mQueueStart) {
-        mQueue.stop();
-        mQueueStart = false;
-    }
-
+    
     if (mAudioEvent != NULL) {
         delete mAudioEvent;
         mAudioEvent = NULL;
@@ -185,11 +181,22 @@ void NBAudioPlayer::stop() {
     mClockManager->unregisterClockProvider(NBClockManager::AV_SYNC_AUDIO_MASTER);
 
     cancelAudioEvent_l();
+    
+    //stop the audio queue
+    if (mQueueStart) {
+        mQueue.stop();
+        mQueueStart = false;
+    }
 
     if (mALAudioRenderer != NULL) {
         mALAudioRenderer->stop();
         delete mALAudioRenderer;
         mALAudioRenderer = NULL;
+    }
+    
+    if (mSwrCtx != NULL) {
+        swr_free(&mSwrCtx);
+        mSwrCtx = NULL;
     }
 }
 

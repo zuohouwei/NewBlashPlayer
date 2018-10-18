@@ -125,7 +125,7 @@ NBMetaData* NBFFmpegADecoder::getFormat() {
 nb_status_t NBFFmpegADecoder::read(NBMediaBuffer **buffer, ReadOptions *options) {
     int ret = OK;
     int64_t seekTimeUs = 0;
-    ReadOptions::SeekMode seekMode = ReadOptions::SeekMode::SEEK_CLOSEST;
+    ReadOptions::SeekMode seekMode = ReadOptions::SEEK_CLOSEST;
     
     if (options != NULL && options->getSeekTo(&seekTimeUs, &seekMode)) {
         if (mCachedBuffer != NULL) {

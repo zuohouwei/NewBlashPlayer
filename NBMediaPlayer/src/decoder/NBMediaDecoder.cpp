@@ -66,6 +66,8 @@ NBMediaSource* NBMediaDecoder::Create(NBMetaData* metaData, NBMediaSource* media
             } else {
                 ret = new NBFFmpegVDecoder(mediaTrack);
             }
+#else
+            ret = new NBFFmpegVDecoder(mediaTrack);
 #endif
         } else {
             ret = new NBFFmpegVDecoder(mediaTrack);

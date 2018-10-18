@@ -162,7 +162,8 @@ nb_status_t NBALAudioRenderer::start(NBMetaData *metaData) {
 
 nb_status_t NBALAudioRenderer::stop() {
     if (mBuffer != NULL) {
-        delete mBuffer;
+        //delete with buffer
+        delete []mBuffer;
         mBuffer = NULL;
     }
 
