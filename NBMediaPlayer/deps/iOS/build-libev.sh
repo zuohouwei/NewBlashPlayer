@@ -35,7 +35,7 @@ CONFIGURE_FLAGS="--enable-cross-compile \
 #./configure --host=${HOST_VAL} --prefix=${CURL_BUILD_DIR}/${ARCH} --disable-shared --enable-static --disable-manual --disable-verbose --without-ldap --disable-ldap --enable-ipv6 --enable-threaded-resolver --with-zlib="${IOS_SDK_PATH}/usr" --with-ssl="/Users/x/Desktop/openssl-1.0.2e-build/universal" &> ${CURL_BUILD_LOG_DIR}/${ARCH}-conf.log
 
 #ARCHS="arm64 armv7 x86_64 i386"
-ARCHS="x86_64"
+ARCHS="x86_64 i386"
 
 COMPILE="y"
 LIPO="y"

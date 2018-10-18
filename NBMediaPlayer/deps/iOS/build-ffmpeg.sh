@@ -46,7 +46,7 @@ CONFIGURE_FLAGS="--enable-cross-compile \
                  --enable-pic"
 
 #ARCHS="arm64 armv7 x86_64 i386"
-ARCHS="x86_64"
+ARCHS="x86_64 i386"
 
 COMPILE="y"
 LIPO="y"

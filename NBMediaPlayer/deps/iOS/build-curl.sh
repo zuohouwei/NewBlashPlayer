@@ -9,7 +9,7 @@ fi
 cd $BUILD_DIR
 
 # directories
-URL_VERSION="7.46.0"
+URL_VERSION="7.56.0"
 if [[ $CURL_VERSION != "" ]]; then
   URL_VERSION=$CURL_VERSION
 fi
@@ -42,7 +42,7 @@ CONFIGURE_FLAGS="--enable-cross-compile \
 
 
 #ARCHS="arm64 armv7 x86_64 i386"
-ARCHS="x86_64"
+ARCHS="x86_64 i386"
 
 COMPILE="y"
 LIPO="y"
