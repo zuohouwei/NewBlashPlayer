@@ -291,7 +291,7 @@ nb_status_t NBFFmpegVDecoder::read(
             else
                 mScaledFrame->pts = 0;
 
-            *buffer = new NBVideoFrame(mScaledFrame, 0, false);
+            *buffer = new NBVideoFrame(mScaledFrame, 0, true);
             return OK;
         } else if (ret == AVERROR_EOF) {
             return ERROR_END_OF_STREAM;

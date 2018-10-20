@@ -29,17 +29,23 @@ NBVideoFrame::NBVideoFrame(AVFrame* frame, int64_t duration, bool release)
 }
 
 NBVideoFrame::~NBVideoFrame() {
-    if (mRelease && mFrame != NULL) {
+    if (mFrame == NULL) {
+        return ;
+    }
+
+    // software decode mode
+    if (mRelease) {
+        av_frame_unref(mFrame);
+    } else {
+        // hardware decode mode
 #ifdef BUILD_TARGET_IOS
         CVBufferRelease((CVBufferRef)mFrame->data[3]);
 #elif BUILD_TARGET_ANDROID
         AMediaCodec_releaseOutputBuffer((AMediaCodec*)mFrame->data[0], mFrame->linesize[0], mFrame->flags == 1 ? true : false);
 #endif
-        
-//        av_frame_unref(mFrame);
-        mRelease = false;
-        mFrame = NULL;
     }
+
+    mFrame = NULL;
 }
 
 void* NBVideoFrame::data() {

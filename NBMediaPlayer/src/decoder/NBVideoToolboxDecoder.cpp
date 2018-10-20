@@ -854,7 +854,7 @@ nb_status_t NBVideoToolboxDecoder::read(
             }
             --mSortedCount;
             
-            *buffer = new NBVideoFrame(mDecodedFrame, 0, true);
+            *buffer = new NBVideoFrame(mDecodedFrame, 0, false);
             break;
         }
     }
