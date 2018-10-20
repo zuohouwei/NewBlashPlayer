@@ -40,8 +40,15 @@ CONFIGURE_FLAGS="--enable-cross-compile \
                  --disable-avdevice \
                  --disable-encoders \
                  --disable-hwaccels \
+		 --disable-postproc \
                  --disable-muxers \
                  --disable-devices \
+		 --disable-coreimage \
+		 --disable-videotoolbox \
+		 --disable-audiotoolbox \
+		 --disable-avfoundation \
+		 --disable-xlib \
+		 --disable-appkit \
                  --enable-small \
                  --enable-pic"
 

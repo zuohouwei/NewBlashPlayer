@@ -23,55 +23,55 @@ INSTALL_PREFIX=`pwd`/"curl-Android"
 
 SCRATCH="curl_scratch"
 
-# disable protocols
-#     		  --disable-protocols \
-#                 --disable-protocol=http \
-#                 --disable-protocol=rtp \
-#                 --disable-protocol=tcp \
-#                 --disable-protocol=udp \
-# 
-# CONFIGURE_FLAGS="--enable-cross-compile \
-#                  --enable-shared=no \
-#                  --enable-static=yes \
-#                  --disable-manual \
-#                  --disable-verbose \
-#                  --disable-ldap \
-#                  --enable-ipv6 \
-#                  --enable-threaded-resolver \
-#                  --disable-soname-bump \
-#                  --disable-ftp \
-#                  --disable-file \
-#                  --disable-ldaps \
-#                  --disable-rtsp \
-#                  --disable-proxy \
-#                  --disable-dict \
-#                  --disable-telnet \
-#                  --disable-tftp \
-#                  --disable-pop3 \
-#                  --disable-imap \
-#                  --disable-smb \
-#                  --disable-smtp \
-#                  --disable-gopher \
-#                  --enable-pic"
+CONFIGURE_FLAGS="--enable-cross-compile \
+                 --enable-pic \
+                 --enable-shared=no \
+                 --enable-static=yes \
+                 --enable-ipv6 \
+                 --enable-threaded-resolver \
+                 --disable-manual \
+                 --disable-verbose \
+		 --disable-crypto-auth \
+                 --disable-ldap \
+                 --disable-soname-bump \
+		 --disable-versioned-symbols \
+		 --disable-sspi \
+		 --disable-tls-srp \
+		 --disable-unix-sockets \
+		 --disable-cookies \
+		 --disable-ntlm-wb \
+                 --disable-ftp \
+                 --disable-file \
+                 --disable-ldap \
+                 --disable-ldaps \
+                 --disable-rtsp \
+                 --disable-proxy \
+                 --disable-dict \
+                 --disable-telnet \
+                 --disable-tftp \
+                 --disable-pop3 \
+                 --disable-imap \
+                 --disable-smb \
+                 --disable-smtp \
+                 --disable-gopher \
+		 --without-zlib"
 
-CONFIGURE_FLAGS="--enable-ipv6 \
-				--enable-static \
-				--enable-threaded-resolver \
-				--disable-dict \
-				--disable-gopher \
-				--disable-ldap \
-				--disable-ldaps \
-				--disable-manual \
-				--disable-pop3 \
-				--disable-smtp \
-				--disable-imap \
-				--disable-rtsp \
-				--disable-shared \
-				--disable-smb \
-				--disable-telnet \
-				--disable-verbose"
-
-#./configure --host=${HOST_VAL} --prefix=${CURL_BUILD_DIR}/${ARCH} --disable-shared --enable-static --disable-manual --disable-verbose --without-ldap --disable-ldap --enable-ipv6 --enable-threaded-resolver --with-zlib="${IOS_SDK_PATH}/usr" --with-ssl="/Users/x/Desktop/openssl-1.0.2e-build/universal" &> ${CURL_BUILD_LOG_DIR}/${ARCH}-conf.log
+#CONFIGURE_FLAGS="--enable-ipv6 \
+#		--enable-static \
+#		--enable-threaded-resolver \
+#		--disable-dict \
+#		--disable-gopher \
+#		--disable-ldap \
+#		--disable-ldaps \
+#		--disable-manual \
+#		--disable-pop3 \
+#		--disable-smtp \
+#		--disable-imap \
+#		--disable-rtsp \
+#		--disable-shared \
+#		--disable-smb \
+#		--disable-telnet \
+#		--disable-verbose"
 
 
 #ARCHS="arm64 armv7 x86_64 i386"
@@ -79,8 +79,6 @@ ARCHS="armeabi-v7a"
 
 COMPILE="y"
 LIPO=""
-
-DEPLOYMENT_TARGET="8.0"
 
 if [ "$*" ]
 then
@@ -100,27 +98,6 @@ fi
 
 if [ "$COMPILE" ]
 then
-	# if [ ! `which yasm` ]
-	# then
-	# 	echo 'Yasm not found'
-	# 	if [ ! `which brew` ]
-	# 	then
-	# 		echo 'Homebrew not found. Trying to install...'
-	#                        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" \
-	# 			|| exit 1
-	# 	fi
-	# 	echo 'Trying to install Yasm...'
-	# 	brew install yasm || exit 1
-	# fi
-	# if [ ! `which gas-preprocessor.pl` ]
-	# then
-	# 	echo 'gas-preprocessor.pl not found. Trying to install...'
-	# 	(curl -L https://github.com/libav/gas-preprocessor/raw/master/gas-preprocessor.pl \
-	# 		-o /usr/local/bin/gas-preprocessor.pl \
-	# 		&& chmod +x /usr/local/bin/gas-preprocessor.pl) \
-	# 		|| exit 1
-	# fi
-
 	CWD=`pwd`
 	if [ ! -r $SOURCE ]
 	then
@@ -138,26 +115,11 @@ then
 		mkdir -p "$SCRATCH/$ARCH"
 		cd "$SCRATCH/$ARCH"
 
-		# CFLAGS="-arch $ARCH"
-		# if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]
-		# then
-		#     PLATFORM="iPhoneSimulator"
-		#     CFLAGS="$CFLAGS -mios-simulator-version-min=$DEPLOYMENT_TARGET"
-		# else
-		#     PLATFORM="iPhoneOS"
-		#     CFLAGS="$CFLAGS -mios-version-min=$DEPLOYMENT_TARGET -fembed-bitcode"
-		#     if [ "$ARCH" = "arm64" ]
-		#     then
-		#         EXPORT="GASPP_FIX_XCODE5=1"
-		#     fi
-		# fi
-
 		if [ "$ARCH" = "armeabi-v7a" ]
 		then
 			TARGET_ARCH="arm"
 		fi
 
-		# XCRUN_SDK=`echo $PLATFORM | tr '[:upper:]' '[:lower:]'`
 		export CC="$TOOLCHAIN/bin/arm-linux-androideabi-gcc --sysroot=$SYSROOT"
 		export CXX="$TOOLCHAIN/bin/arm-linux-androideabi-g++ --sysroot=$SYSROOT"
 		export LINK="$CXX"
@@ -165,14 +127,6 @@ then
 		export AR=$TOOLCHAIN/bin/arm-linux-androideabi-ar
 		export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
 		export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
-
-		# # force "configure" to use "gas-preprocessor.pl" (FFmpeg 3.4.4)
-		# if [ "$ARCH" = "arm64" ]
-		# then
-		#     AS="gas-preprocessor.pl -arch aarch64 -- $CC"
-		# else
-		#     AS="gas-preprocessor.pl -- $CC"
-		# fi
 
 		CXXFLAGS="$CFLAGS"
 		LDFLAGS="$CFLAGS"
@@ -189,24 +143,6 @@ then
 		cd $CWD
 	done
 fi
-
-# if [ "$LIPO" ]
-# then
-# 	echo "building fat binaries..."
-# 	mkdir -p $FAT/lib
-# 	set - $ARCHS
-# 	CWD=`pwd`
-# 	cd $THIN/$1/lib
-# 	for LIB in *.a
-# 	do
-# 		cd $CWD
-# 		echo lipo -create `find $THIN -name $LIB` -output $FAT/lib/$LIB 1>&2
-# 		lipo -create `find $THIN -name $LIB` -output $FAT/lib/$LIB || exit 1
-# 	done
-
-# 	cd $CWD
-# 	cp -rf $THIN/$1/include $FAT
-# fi
 
 cp -rf $INSTALL_PREFIX `pwd`/../curl
 
