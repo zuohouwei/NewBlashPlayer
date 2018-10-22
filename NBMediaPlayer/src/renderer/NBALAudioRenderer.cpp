@@ -9,14 +9,16 @@
 
 #include <NBLog.h>
 
-#if defined(BUILD_TARGET_LINUX64) || defined(BUILD_TARGET_ANDROID)
+#define AL_ALEXT_PROTOTYPES
+
+//#if defined(BUILD_TARGET_LINUX64) || defined(BUILD_TARGET_ANDROID)
 #include "AL/al.h"
 #include "AL/alc.h"
 #include "AL/alext.h"
-#elif BUILD_TARGET_IOS
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-#endif
+//#elif BUILD_TARGET_IOS
+//#include <OpenAL/al.h>
+//#include <OpenAL/alc.h>
+//#endif
 
 #ifdef __cplusplus
 extern "C"
@@ -156,6 +158,9 @@ nb_status_t NBALAudioRenderer::start(NBMetaData *metaData) {
 
     mDstChannels = codecChannels;
     mDstSampleRate = codecSampleRate;
+    
+    //auto start play audio service
+    alcDeviceResumeSOFT(mALCDev);
 
     return OK;
 }
@@ -281,6 +286,10 @@ nb_status_t NBALAudioRenderer::pause(bool at_eos) {
         return OK;
     }
     alSourcePause(mALSource);
+    
+    //auto start play audio service
+    alcDevicePauseSOFT(mALCDev);
+    
     return OK;
 }
 

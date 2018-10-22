@@ -53,38 +53,39 @@ typedef struct {
 
 static const ALCchar ca_device[] = "CoreAudio Default";
 
-
-static void destroy_buffer_list(AudioBufferList* list)
-{
-    if(list)
-    {
-        UInt32 i;
-        for(i = 0;i < list->mNumberBuffers;i++)
-            free(list->mBuffers[i].mData);
-        free(list);
-    }
-}
-
-static AudioBufferList* allocate_buffer_list(UInt32 channelCount, UInt32 byteSize)
-{
-    AudioBufferList *list;
-
-    list = calloc(1, sizeof(AudioBufferList) + sizeof(AudioBuffer));
-    if(list)
-    {
-        list->mNumberBuffers = 1;
-
-        list->mBuffers[0].mNumberChannels = channelCount;
-        list->mBuffers[0].mDataByteSize = byteSize;
-        list->mBuffers[0].mData = malloc(byteSize);
-        if(list->mBuffers[0].mData == NULL)
-        {
-            free(list);
-            list = NULL;
-        }
-    }
-    return list;
-}
+// fixed by bobmarshall begin
+//static void destroy_buffer_list(AudioBufferList* list)
+//{
+//    if(list)
+//    {
+//        UInt32 i;
+//        for(i = 0;i < list->mNumberBuffers;i++)
+//            free(list->mBuffers[i].mData);
+//        free(list);
+//    }
+//}
+//
+//static AudioBufferList* allocate_buffer_list(UInt32 channelCount, UInt32 byteSize)
+//{
+//    AudioBufferList *list;
+//
+//    list = calloc(1, sizeof(AudioBufferList) + sizeof(AudioBuffer));
+//    if(list)
+//    {
+//        list->mNumberBuffers = 1;
+//
+//        list->mBuffers[0].mNumberChannels = channelCount;
+//        list->mBuffers[0].mDataByteSize = byteSize;
+//        list->mBuffers[0].mData = malloc(byteSize);
+//        if(list->mBuffers[0].mData == NULL)
+//        {
+//            free(list);
+//            list = NULL;
+//        }
+//    }
+//    return list;
+//}
+// fixed by bobmarshall end
 
 static OSStatus ca_callback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp,
                             UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
@@ -98,45 +99,47 @@ static OSStatus ca_callback(void *inRefCon, AudioUnitRenderActionFlags *ioAction
     return noErr;
 }
 
-static OSStatus ca_capture_conversion_callback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets,
-        AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void* inUserData)
-{
-    ALCdevice *device = (ALCdevice*)inUserData;
-    ca_data *data = (ca_data*)device->ExtraData;
-
-    // Read from the ring buffer and store temporarily in a large buffer
-    ReadRingBuffer(data->ring, data->resampleBuffer, (ALsizei)(*ioNumberDataPackets));
-
-    // Set the input data
-    ioData->mNumberBuffers = 1;
-    ioData->mBuffers[0].mNumberChannels = data->format.mChannelsPerFrame;
-    ioData->mBuffers[0].mData = data->resampleBuffer;
-    ioData->mBuffers[0].mDataByteSize = (*ioNumberDataPackets) * data->format.mBytesPerFrame;
-
-    return noErr;
-}
-
-static OSStatus ca_capture_callback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags,
-                                    const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber,
-                                    UInt32 inNumberFrames, AudioBufferList *ioData)
-{
-    ALCdevice *device = (ALCdevice*)inRefCon;
-    ca_data *data = (ca_data*)device->ExtraData;
-    AudioUnitRenderActionFlags flags = 0;
-    OSStatus err;
-
-    // fill the bufferList with data from the input device
-    err = AudioUnitRender(data->audioUnit, &flags, inTimeStamp, 1, inNumberFrames, data->bufferList);
-    if(err != noErr)
-    {
-        ERR("AudioUnitRender error: %d\n", err);
-        return err;
-    }
-
-    WriteRingBuffer(data->ring, data->bufferList->mBuffers[0].mData, inNumberFrames);
-
-    return noErr;
-}
+// fixed by bobmarshall begin
+//static OSStatus ca_capture_conversion_callback(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets,
+//        AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void* inUserData)
+//{
+//    ALCdevice *device = (ALCdevice*)inUserData;
+//    ca_data *data = (ca_data*)device->ExtraData;
+//
+//    // Read from the ring buffer and store temporarily in a large buffer
+//    ReadRingBuffer(data->ring, data->resampleBuffer, (ALsizei)(*ioNumberDataPackets));
+//
+//    // Set the input data
+//    ioData->mNumberBuffers = 1;
+//    ioData->mBuffers[0].mNumberChannels = data->format.mChannelsPerFrame;
+//    ioData->mBuffers[0].mData = data->resampleBuffer;
+//    ioData->mBuffers[0].mDataByteSize = (*ioNumberDataPackets) * data->format.mBytesPerFrame;
+//
+//    return noErr;
+//}
+//
+//static OSStatus ca_capture_callback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags,
+//                                    const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber,
+//                                    UInt32 inNumberFrames, AudioBufferList *ioData)
+//{
+//    ALCdevice *device = (ALCdevice*)inRefCon;
+//    ca_data *data = (ca_data*)device->ExtraData;
+//    AudioUnitRenderActionFlags flags = 0;
+//    OSStatus err;
+//
+//    // fill the bufferList with data from the input device
+//    err = AudioUnitRender(data->audioUnit, &flags, inTimeStamp, 1, inNumberFrames, data->bufferList);
+//    if(err != noErr)
+//    {
+//        ERR("AudioUnitRender error: %d\n", err);
+//        return err;
+//    }
+//
+//    WriteRingBuffer(data->ring, data->bufferList->mBuffers[0].mData, inNumberFrames);
+//
+//    return noErr;
+//}
+// fixed by bobmarshall end
 
 static ALCenum ca_open_playback(ALCdevice *device, const ALCchar *deviceName)
 {
