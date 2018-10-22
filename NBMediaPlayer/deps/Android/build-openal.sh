@@ -9,7 +9,8 @@ fi
 cd $BUILD_DIR
 
 # directories
-AL_VERSION="1.19.1"
+# AL_VERSION="1.19.1"
+AL_VERSION="1.17.2"
 if [[ $OPENAL_VERSION != "" ]]; then
   AL_VERSION=$OPENAL_VERSION
 fi
