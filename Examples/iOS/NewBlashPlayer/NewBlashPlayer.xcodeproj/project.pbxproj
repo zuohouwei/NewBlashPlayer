@@ -15,7 +15,6 @@
 		FA2777F0214FBD70007DD0B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA2777EE214FBD70007DD0B5 /* LaunchScreen.storyboard */; };
 		FA34375F214FE16100EDC73E /* NBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA34375D214FE16100EDC73E /* NBPlayerViewController.m */; };
 		FA343760214FE16100EDC73E /* NBPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA34375E214FE16100EDC73E /* NBPlayerViewController.xib */; };
-		FA34376F214FE8E700EDC73E /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA34376D214FE8E700EDC73E /* OpenAL.framework */; };
 		FA343770214FE8E700EDC73E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA34376E214FE8E700EDC73E /* OpenGLES.framework */; };
 		FA343772214FE8F500EDC73E /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA343771214FE8F500EDC73E /* VideoToolbox.framework */; };
 		FA343774214FE90700EDC73E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA343773214FE90700EDC73E /* CoreMedia.framework */; };
@@ -60,6 +59,7 @@
 		FA343779214FE93C00EDC73E /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		FA34377B214FE94D00EDC73E /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		FA6DEB462175112A009002E2 /* NBMediaPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NBMediaPlayer.xcodeproj; path = ../../../NBMediaPlayer/platform/iOS/NBMediaPlayer.xcodeproj; sourceTree = "<group>"; };
+		FAB7FF7F217DF33D00508CE4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		FAF6DB4821515A4500F6E6AD /* NBNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBNavigationViewController.h; sourceTree = "<group>"; };
 		FAF6DB4921515A4500F6E6AD /* NBNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBNavigationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,7 +76,6 @@
 				FA343776214FE91D00EDC73E /* AudioToolbox.framework in Frameworks */,
 				FA343774214FE90700EDC73E /* CoreMedia.framework in Frameworks */,
 				FA343772214FE8F500EDC73E /* VideoToolbox.framework in Frameworks */,
-				FA34376F214FE8E700EDC73E /* OpenAL.framework in Frameworks */,
 				FA343770214FE8E700EDC73E /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +86,7 @@
 		FA08D356214FD20C0003E97E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAB7FF7F217DF33D00508CE4 /* MobileCoreServices.framework */,
 				FA6DEB462175112A009002E2 /* NBMediaPlayer.xcodeproj */,
 				FA34377B214FE94D00EDC73E /* libiconv.2.4.0.tbd */,
 				FA343779214FE93C00EDC73E /* libbz2.1.0.tbd */,

@@ -64,6 +64,7 @@
 		FA96900E215DE39F00F77705 /* DEBaseTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA968FFE215DE39F00F77705 /* DEBaseTask.cpp */; };
 		FA96900F215DE39F00F77705 /* DECurlHttpTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA969000215DE39F00F77705 /* DECurlHttpTask.cpp */; };
 		FA969010215DE39F00F77705 /* DECurlTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA969002215DE39F00F77705 /* DECurlTask.cpp */; };
+		FAA5A28F217DF27B0080C0EB /* libOpenALSoft.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5A19F217DF2000080C0EB /* libOpenALSoft.a */; };
 		FAA7DEC72176F93B00D021AB /* zipfile.c in Sources */ = {isa = PBXBuildFile; fileRef = FAA7DEC62176F93B00D021AB /* zipfile.c */; };
 		FAA7DF232177044A00D021AB /* dir.c in Sources */ = {isa = PBXBuildFile; fileRef = FAA7DF062177044900D021AB /* dir.c */; };
 		FAA7DF242177044A00D021AB /* err.c in Sources */ = {isa = PBXBuildFile; fileRef = FAA7DF072177044900D021AB /* err.c */; };
@@ -127,6 +128,16 @@
 		FAFA65B92174181100176A9F /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFA65B42174181100176A9F /* libavformat.a */; };
 		FAFA65BA2174181100176A9F /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFA65B52174181100176A9F /* libswresample.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FAA5A19E217DF2000080C0EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAA5A19A217DF2000080C0EB /* OpenALSoft.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FAA5A18E217DF1CA0080C0EB;
+			remoteInfo = OpenALSoft;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		FA27784F214FC6AC007DD0B5 /* CopyFiles */ = {
@@ -328,6 +339,7 @@
 		FA969003215DE39F00F77705 /* DECurlTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DECurlTask.h; sourceTree = "<group>"; };
 		FA969006215DE39F00F77705 /* DELRUCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DELRUCache.h; sourceTree = "<group>"; };
 		FA969011215E71DA00F77705 /* NBSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NBSet.h; sourceTree = "<group>"; };
+		FAA5A19A217DF2000080C0EB /* OpenALSoft.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OpenALSoft.xcodeproj; path = "../../deps/openal-soft/build/OpenALSoft.xcodeproj"; sourceTree = "<group>"; };
 		FAA7DEC62176F93B00D021AB /* zipfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zipfile.c; sourceTree = "<group>"; };
 		FAA7DEFD2177044900D021AB /* __debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = __debug.h; sourceTree = "<group>"; };
 		FAA7DEFE2177044900D021AB /* __dirent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = __dirent.h; sourceTree = "<group>"; };
@@ -452,6 +464,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAA5A28F217DF27B0080C0EB /* libOpenALSoft.a in Frameworks */,
 				FAFA65B62174181100176A9F /* libswscale.a in Frameworks */,
 				FAFA65B72174181100176A9F /* libavutil.a in Frameworks */,
 				FAFA65B82174181100176A9F /* libavcodec.a in Frameworks */,
@@ -729,6 +742,7 @@
 		FA343764214FE87700EDC73E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAA5A19A217DF2000080C0EB /* OpenALSoft.xcodeproj */,
 				FAFA65B32174181100176A9F /* libavcodec.a */,
 				FAFA65B42174181100176A9F /* libavformat.a */,
 				FAFA65B22174181100176A9F /* libavutil.a */,
@@ -948,6 +962,14 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
+		FAA5A19B217DF2000080C0EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAA5A19F217DF2000080C0EB /* libOpenALSoft.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FAA7DEFC2177044900D021AB /* zzip */ = {
 			isa = PBXGroup;
 			children = (
@@ -1039,12 +1061,28 @@
 			mainGroup = FA277848214FC6AC007DD0B5;
 			productRefGroup = FA277852214FC6AC007DD0B5 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FAA5A19B217DF2000080C0EB /* Products */;
+					ProjectRef = FAA5A19A217DF2000080C0EB /* OpenALSoft.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				FA277850214FC6AC007DD0B5 /* NBMediaPlayer */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FAA5A19F217DF2000080C0EB /* libOpenALSoft.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOpenALSoft.a;
+			remoteRef = FAA5A19E217DF2000080C0EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FA27784D214FC6AC007DD0B5 /* Sources */ = {
@@ -1271,6 +1309,7 @@
 					"$(SOURCE_ROOT)/../../deps/iOS/libev/include",
 					"$(SOURCE_ROOT)/../../deps/iOS/curl/include",
 					"$(SOURCE_ROOT)/../../deps/NBLog/include",
+					"$(SOURCE_ROOT)/../../deps/openal-soft/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1301,6 +1340,7 @@
 					"$(SOURCE_ROOT)/../../deps/iOS/libev/include",
 					"$(SOURCE_ROOT)/../../deps/iOS/curl/include",
 					"$(SOURCE_ROOT)/../../deps/NBLog/include",
+					"$(SOURCE_ROOT)/../../deps/openal-soft/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
