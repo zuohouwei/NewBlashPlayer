@@ -25,7 +25,7 @@ extern "C" {
 
 #define LOG_TAG "NBFFmpegExtractor"
 
-#define MIN_FRAMES 25
+#define MIN_FRAMES 12
 
 struct FFExtractorEvent : public NBTimedEventQueue::Event {
     FFExtractorEvent(

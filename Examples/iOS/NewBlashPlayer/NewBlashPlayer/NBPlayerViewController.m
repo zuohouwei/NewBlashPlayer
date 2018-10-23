@@ -27,9 +27,9 @@
     _nbAVPlayer = [[NBAVPlayer alloc] init];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/DAS0N1_Good_Bye.mp4"] params:nil];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/LoveTheWayYouLie.mp3"] params:nil];
-//    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/The_Innocents_01_01.mp4"] params:nil];
+    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/The_Innocents_01_01.mp4"] params:nil];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/DAS0N1_Good_Bye_MPEG4.avi"] params:nil];
-    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/DAS0N1_Good_Bye_HEVC.mp4"] params:nil];
+//    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"/Users/liuenbao/Desktop/SharedFiles/DAS0N1_Good_Bye_HEVC.mp4"] params:nil];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"zip:/Users/liuenbao/Desktop/SharedFiles/DAS0N1_Good_Bye.mp4.zip"] params:nil];
 
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"http://127.0.0.1:8989/The_Innocents_01_01.mp4"] params:nil];
@@ -78,13 +78,13 @@
     
     NSLog(@"seek pos : %lld duration : %lld", currPos, duration);
   
-    [_nbAVPlayer pause];
-    
-    [_seekTime invalidate];
-    _seekTime = nil;
-    
-    _seekTime = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setgravityTimerFired:) userInfo:nil repeats:NO];
-    
+//    [_nbAVPlayer pause];
+//
+//    [_seekTime invalidate];
+//    _seekTime = nil;
+//
+//    _seekTime = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setgravityTimerFired:) userInfo:nil repeats:NO];
+//
 //    [_nbAVPlayer seekTo:currPos + duration * 0.1];
 //
 //    [_nbAVPlayer seekTo:100];
