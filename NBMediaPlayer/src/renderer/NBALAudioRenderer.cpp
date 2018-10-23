@@ -332,9 +332,9 @@ nb_status_t NBALAudioRenderer::flushALContext() {
     uint32_t unqueueCount = processed + queued;
 
     if (unqueueCount > 0) {
-        ALuint* buffer = new ALuint[unqueueCount];
+        ALuint* buffer = (ALuint*)alloca(unqueueCount * sizeof(ALuint)); // new ALuint[unqueueCount];
         alSourceUnqueueBuffers(mALSource, unqueueCount, buffer);
-        delete[] buffer;
+//        delete[] buffer;
     }
 
     alSourceRewind(mALSource);
