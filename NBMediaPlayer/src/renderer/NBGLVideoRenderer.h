@@ -26,6 +26,8 @@ public:
 
     void setVideoOutput(NBRendererTarget* vo);
     nb_status_t displayFrame(NBMediaBuffer* mediaBuffer);
+    
+    virtual void invalidate();
 
 public:
     virtual nb_status_t start(NBMetaData* metaData = NULL);

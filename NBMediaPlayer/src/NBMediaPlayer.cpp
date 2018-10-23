@@ -776,6 +776,14 @@ void NBMediaPlayer::onVideoEvent() {
     }
     mVideoEventPending = false;
     
+    if (mInvalidateRenderer) {
+        if (mVideoRenderer != NULL) {
+            mVideoRenderer->invalidate();
+        }
+        mInvalidateRenderer = false;
+        return ;
+    }
+    
     if (mSeeking != NO_SEEK) {
         //Free current data
         if (mVideoBuffer) {
@@ -1358,6 +1366,27 @@ void NBMediaPlayer::stop() {
 //    }
 }
 
+void NBMediaPlayer::invalidateRenderer() {
+    NBAutoMutex autoLock(mLock);
+    
+    if (mFlags == 0) {
+        return ;
+    }
+    
+    // if is preparing don't needed
+    if (mFlags & PREPARING) {
+        return ;
+    }
+    
+    // if is playing don't needed
+    if (mFlags & PLAYING) {
+        return ;
+    }
+    
+    mInvalidateRenderer = true;
+    postVideoEvent_l();
+}
+
 nb_status_t NBMediaPlayer::getVideoWidth(int32_t *vWidth) {
     NBAutoMutex autoLock(mStatsLock);
     if (vWidth == NULL) {
@@ -1382,6 +1411,8 @@ void NBMediaPlayer::reset_l() {
     mAudioTrackIndex = 0;
     mDisplayWidth = 0;
     mDisplayHeight = 0;
+    
+    mInvalidateRenderer = false;
 
 //    notifyListener_l(MEDIA_STOPPED);
 //

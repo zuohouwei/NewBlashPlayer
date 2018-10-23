@@ -44,7 +44,7 @@
 - (void)mediaPlayer:(NBAVPlayer *)player didPrepared:(id)arg {
     [_nbAVPlayer start];
     
-//    _seekTime = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(seekTimerFired:) userInfo:nil repeats:YES];
+    _seekTime = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(seekTimerFired:) userInfo:nil repeats:NO];
 }
 
 - (void)mediaPlayer:(NBAVPlayer *)player playbackComplete:(id)arg {
@@ -77,10 +77,21 @@
     int64_t duration = [_nbAVPlayer getDuration];
     
     NSLog(@"seek pos : %lld duration : %lld", currPos, duration);
+  
+    [_nbAVPlayer pause];
     
-    [_nbAVPlayer seekTo:currPos + duration * 0.1];
+    [_seekTime invalidate];
+    _seekTime = nil;
     
+    _seekTime = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setgravityTimerFired:) userInfo:nil repeats:NO];
+    
+//    [_nbAVPlayer seekTo:currPos + duration * 0.1];
+//
 //    [_nbAVPlayer seekTo:100];
+}
+
+- (void)setgravityTimerFired:(id)sender {
+    [_nbGLView setVideoGravity:NBVideoGravityResizeAspectFill];
 }
 
 - (void)didReceiveMemoryWarning {

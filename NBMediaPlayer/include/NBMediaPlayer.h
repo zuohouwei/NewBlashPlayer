@@ -188,6 +188,8 @@ public:
     void reset();
     void stop();
     
+    void invalidateRenderer();
+    
     nb_status_t getVideoWidth(int32_t *vWidth);
     nb_status_t getVideoHeight(int32_t *vHeight);
 
@@ -399,6 +401,9 @@ private:
 
     nb_status_t mStreamDoneStatus;
 
+    // invalidate renderer
+    bool mInvalidateRenderer;
+    
     //Use clock proxy
     friend NBClockProxy;
     NBClockProxy* mClockProxy;

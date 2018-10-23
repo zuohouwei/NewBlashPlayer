@@ -5,6 +5,8 @@
 #include "NBGLVideoRenderer.h"
 #include "NBRendererInfo.h"
 
+#include "NBGLShaderUtils.h"
+
 #ifdef BUILD_TARGET_LINUX64
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
@@ -155,4 +157,17 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
     postRender(mVideoOutput);
 
     return OK;
+}
+
+void NBGLVideoRenderer::invalidate() {
+    NBRenderInfo info;
+    
+    preRender(mVideoOutput, &info);
+    
+    glViewport(info.x, info.y, info.width, info.height);
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    OPENGLES2_CHECK();
+    
+    postRender(mVideoOutput);
 }

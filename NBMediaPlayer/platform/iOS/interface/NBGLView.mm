@@ -231,7 +231,17 @@
 }
 
 - (void)setVideoGravity:(NBVideoGravity)videoGravity {
+    if (videoGravity == NBVideoGravityUnknow) {
+        return ;
+    }
+    
+    if (videoGravity == _curVideoGravity) {
+        return ;
+    }
     _preferVideoGravity = videoGravity;
+    
+    NBMediaPlayer* mp = (NBMediaPlayer*)[_player playerInternal];
+    mp->invalidateRenderer();
 }
 
 @end
