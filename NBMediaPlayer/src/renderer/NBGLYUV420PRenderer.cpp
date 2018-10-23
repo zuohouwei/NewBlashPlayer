@@ -232,11 +232,11 @@ nb_status_t NBGLYUV420PRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, in
             m2UnpackAlignBytes = 1;
         }
 
-        memcpy(videoVertexsCoord, initFrameSize, sizeof(initFrameSize));
+        memcpy(mVideoVertexsCoord, InitVertexsCoord, sizeof(InitVertexsCoord));
 
         float rightAlign = (videoFrame->linesize[0] - videoFrame->width) * 1.0f / videoFrame->width;
-        videoVertexsCoord[2] += rightAlign * 2.1f;   //adjust the right position
-        videoVertexsCoord[6] += rightAlign * 2.1f;
+        mVideoVertexsCoord[2] += rightAlign * 2.1f;   //adjust the right position
+        mVideoVertexsCoord[6] += rightAlign * 2.1f;
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mSample0Texture);
@@ -306,11 +306,11 @@ nb_status_t NBGLYUV420PRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, in
         
 //            glUniformMatrix4fv(mUniformMatrix, 1, GL_FALSE, mModelviewProj);
 
-        glVertexAttribPointer(mPositionSlot, 2, GL_FLOAT, 0, 0, videoVertexsCoord);
+        glVertexAttribPointer(mPositionSlot, 2, GL_FLOAT, 0, 0, mVideoVertexsCoord);
         glEnableVertexAttribArray(mPositionSlot);
         OPENGLES2_CHECK();
 
-        glVertexAttribPointer(mTexCoordSlot, 2, GL_FLOAT, 0, 0, videoTextureCoord);
+        glVertexAttribPointer(mTexCoordSlot, 2, GL_FLOAT, 0, 0, VideoTextureCoord);
         glEnableVertexAttribArray(mTexCoordSlot);
         OPENGLES2_CHECK();
 

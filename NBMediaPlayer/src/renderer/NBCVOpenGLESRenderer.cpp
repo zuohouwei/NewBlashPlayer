@@ -267,8 +267,7 @@ nb_status_t NBCVOpenGLESRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, i
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     OPENGLES2_CHECK();
     
-    static float videoVertexsCoord[8];
-    memcpy(videoVertexsCoord, initFrameSize, sizeof(initFrameSize));
+    memcpy(mVideoVertexsCoord, InitVertexsCoord, sizeof(InitVertexsCoord));
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -277,13 +276,11 @@ nb_status_t NBCVOpenGLESRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, i
     glUniformMatrix3fv(mSample2TextureSlot, 1, GL_FALSE, _preferredConversion);
     OPENGLES2_CHECK();
 
-    glVertexAttribPointer(mPositionSlot, 2, GL_FLOAT, 0, 0, videoVertexsCoord);
+    glVertexAttribPointer(mPositionSlot, 2, GL_FLOAT, 0, 0, mVideoVertexsCoord);
     glEnableVertexAttribArray(mPositionSlot);
     OPENGLES2_CHECK();
     
-    OPENGLES2_CHECK();
-    
-    glVertexAttribPointer(mTexCoordSlot, 2, GL_FLOAT, 0, 0, videoTextureCoord);
+    glVertexAttribPointer(mTexCoordSlot, 2, GL_FLOAT, 0, 0, VideoTextureCoord);
     glEnableVertexAttribArray(mTexCoordSlot);
     OPENGLES2_CHECK();
     

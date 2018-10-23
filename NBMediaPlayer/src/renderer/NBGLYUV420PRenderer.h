@@ -18,8 +18,6 @@ public:
 
 private:
     virtual nb_status_t displayFrameImpl(NBMediaBuffer* mediaBuffer, int tgtWidth, int tgtHeight);
-    
-    float videoVertexsCoord[8];
 };
 
 #endif //NBGLYUV420PRENDERER_H

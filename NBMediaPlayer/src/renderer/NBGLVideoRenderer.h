@@ -34,9 +34,9 @@ public:
 protected:
     virtual nb_status_t displayFrameImpl(NBMediaBuffer* mediaBuffer, int tgtWidth, int tgtHeight) = 0;
 
-    void mat4fLoadPerspective(GLfloat eyex, GLfloat eyey, GLfloat eyez,
-                              GLfloat centerx, GLfloat centery, GLfloat centerz,
-                              GLfloat upx, GLfloat upy, GLfloat upz);
+//    void mat4fLoadPerspective(GLfloat eyex, GLfloat eyey, GLfloat eyez,
+//                              GLfloat centerx, GLfloat centery, GLfloat centerz,
+//                              GLfloat upx, GLfloat upy, GLfloat upz);
 
     //The Sample Texture Id
     GLuint mSample0Texture;
@@ -63,14 +63,19 @@ protected:
     GLuint mProgramHandle;
 
     //The View Matrix
-//        GLint mUniformMatrix;
-    GLfloat mModelviewProj[16];
+//    GLint mUniformMatrix;
+//    GLfloat mModelviewProj[16];
 
     //Whether the object is rendered
     bool mInited;
 
-    static float videoTextureCoord[8];
-    static float initFrameSize[8];
+    static float VideoTextureCoord[8];
+    
+    // the origin output video coord
+    static float InitVertexsCoord[8];
+    
+    // the result output video coord
+    float mVideoVertexsCoord[8];
 };
 
 #endif //NBGLVIDEORENDERER_H
