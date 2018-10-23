@@ -8,6 +8,19 @@
 
 #import <UIKit/UIView.h>
 
+typedef NS_ENUM(NSInteger, NBVideoGravity) {
+    NBVideoGravityUnknow = -1,
+    NBVideoGravityResizeAspect,
+    NBVideoGravityResizeAspectFill,
+    NBVideoGravityResize,
+};
+
+@class NBAVPlayer;
+
 @interface NBGLView : UIView
+
+@property (nonatomic, retain) NBAVPlayer* player;
+
+@property (nonatomic, assign) NBVideoGravity videoGravity;
 
 @end

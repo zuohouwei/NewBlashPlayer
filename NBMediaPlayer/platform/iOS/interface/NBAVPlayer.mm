@@ -18,7 +18,6 @@ class MediaPlayerListener;
 @interface NBAVPlayer () {
     NBMediaPlayer* mp;
     MediaPlayerListener* _playerListener;
-    NBRendererTarget _renderTarget;
 }
 
 - (void)onNativeEventRecieved:(id)params;
@@ -64,10 +63,14 @@ private:
     mp->setDataSource([[uri absoluteString] UTF8String], NULL);
 }
 
-- (void)setVideoOutput:(NBGLView*)glView {
-    _renderTarget.params = (__bridge void*)glView;
-    mp->setVideoOutput(&_renderTarget);
+- (void*)playerInternal {
+    return mp;
 }
+
+//- (void)setVideoOutput:(NBGLView*)glView {
+//    _renderTarget.params = (__bridge void*)glView;
+//    mp->setVideoOutput(&_renderTarget);
+//}
 
 - (void)prepareAsync {
     mp->prepareAsync();

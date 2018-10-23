@@ -7,6 +7,7 @@
 //
 
 #import "NBGLView.h"
+#import "NBAVPlayer.h"
 #import <OpenGLES/EAGL.h>
 #import <QuartzCore/CAEAGLLayer.h>
 
@@ -14,6 +15,7 @@
 #include <OpenGLES/ES2/glext.h>
 
 #include <NBRendererInfo.h>
+#include <NBMediaPlayer.h>
 
 @interface NBGLView () {
     GLuint defaultFrameBuffer;
@@ -21,6 +23,15 @@
     GLint backingWidth;
     GLint backingHeight;
     EAGLContext* _glContext;
+    
+    // set the prefer gravity
+    NBVideoGravity _curVideoGravity;
+    NBVideoGravity _preferVideoGravity;
+    
+    NBRendererTarget _renderTarget;
+    NBRenderInfo _renderInfo;
+    
+    NBAVPlayer* _player;
 }
 
 - (nb_status_t)prepareRendererCtx;
@@ -81,6 +92,9 @@
         return FALSE;
     }
     
+    _curVideoGravity = NBVideoGravityUnknow;
+    _preferVideoGravity = NBVideoGravityResizeAspect;
+    
     return TRUE;
 }
 
@@ -119,6 +133,20 @@
     _glContext = nil;
 }
 
+- (void)setPlayer:(NBAVPlayer *)player {
+    if (player == NULL) {
+        return ;
+    }
+    NBMediaPlayer* mp = (NBMediaPlayer*)[player playerInternal];
+    _renderTarget.params = (__bridge void*)self;
+    mp->setVideoOutput(&_renderTarget);
+    _player = player;
+}
+
+- (NBAVPlayer*)player {
+    return _player;
+}
+
 - (nb_status_t)prepareRendererCtx {
     [EAGLContext setCurrentContext:_glContext];
     return OK;
@@ -134,11 +162,53 @@
     // TODO: need to check if render is correctly settup
     [EAGLContext setCurrentContext:_glContext];
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFrameBuffer);
+    
+    if (_curVideoGravity != _preferVideoGravity) {
+        NBMediaPlayer* mp = (NBMediaPlayer*)[_player playerInternal];
+        
+        int32_t videoWidth = 0;
+        int32_t videoHeigth = 0;
+        
+        mp->getVideoWidth(&videoWidth);
+        mp->getVideoHeight(&videoHeigth);
+        
+        float ratioVideo = videoWidth * 1.0f / videoHeigth;
+//        float ratioScreen = backingWidth * 1.0f / backingHeight;
+        switch(_preferVideoGravity) {
+            case NBVideoGravityResizeAspect:
+                {
+                    int targetWidth = backingHeight * ratioVideo;
+                    _renderInfo.x = 0;
+                    _renderInfo.y = (backingWidth - targetWidth) / 2;
+                    _renderInfo.width = targetWidth;
+                    _renderInfo.height = backingHeight;
+                }
+                break;
+            case NBVideoGravityResizeAspectFill:
+                {
+                    int targetHeight = backingWidth / ratioVideo;
+                    _renderInfo.x = 0;
+                    _renderInfo.y = (backingHeight - targetHeight) / 2;
+                    _renderInfo.width = backingWidth;
+                    _renderInfo.height = targetHeight;
+                }
+                break;
+            case NBVideoGravityResize:
+                {
+                    _renderInfo.x = 0;
+                    _renderInfo.y = 0;
+                    _renderInfo.width = backingWidth;
+                    _renderInfo.height = backingHeight;
+                }
+                break;
+        }
+        _curVideoGravity = _preferVideoGravity;
+    }
+    
+    glViewport(0, 0, backingWidth, backingHeight);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    info->x = 0;
-    info->y = 0;
-    info->width = backingWidth;
-    info->height = backingHeight;
+    *info = _renderInfo;
     return OK;
 }
 
@@ -154,6 +224,14 @@
 
 - (void*)getRendererCtx {
     return (__bridge void*)_glContext;
+}
+
+- (NBVideoGravity)videoGravity {
+    return _curVideoGravity;
+}
+
+- (void)setVideoGravity:(NBVideoGravity)videoGravity {
+    _preferVideoGravity = videoGravity;
 }
 
 @end

@@ -111,9 +111,11 @@
 
 @property (nonatomic, assign) id<NBAVPlayerDelegate> delegate;
 
+@property (nonatomic, readonly, assign) void* playerInternal;
+
 - (void)setDataSource:(NSURL*)path params:(NSDictionary*)headers;
 
-- (void)setVideoOutput:(NBGLView*)glView;
+//- (void)setVideoOutput:(NBGLView*)glView;
 
 - (void)start;
 
