@@ -950,6 +950,11 @@ void NBMediaPlayer::onVideoEvent() {
 
     mLastVideoTimeUs = timeUs;
 
+    if (wasSeeking != NO_SEEK && (mFlags & SEEK_PREVIEW)) {
+        modifyFlags(SEEK_PREVIEW, CLEAR);
+        return;
+    }
+
     postVideoEvent_l(0);
 }
 
