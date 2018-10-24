@@ -10,14 +10,14 @@
 #import "NBAVPlayer.h"
 #import <OpenGLES/EAGL.h>
 #import <QuartzCore/CAEAGLLayer.h>
+#import "NBRenderContext.h"
 
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-#include <NBRendererInfo.h>
 #include <NBMediaPlayer.h>
 
-@interface NBGLView () {
+@interface NBGLView () <NBRenderProtocol> {
     GLuint defaultFrameBuffer;
     GLuint colorRenderBuffer;
     GLint backingWidth;
@@ -246,22 +246,6 @@
 
 @end
 
-void* getRendererCtx(NBRendererTarget* target) {
-    return [(__bridge NBGLView*)target->params getRendererCtx];
-}
+// this is important, force linker to load this file
+#include "NBRenderContext.mm"
 
-nb_status_t prepareRendererCtx(NBRendererTarget* target) {
-    return [(__bridge NBGLView*)target->params prepareRendererCtx];
-}
-
-void destroyRendererCtx(NBRendererTarget* target) {
-    return [(__bridge NBGLView*)target->params destroyRendererCtx];
-}
-
-nb_status_t preRender(NBRendererTarget* target, NBRenderInfo* info) {
-    return [(__bridge NBGLView*)target->params preRender:info];
-}
-
-nb_status_t postRender(NBRendererTarget* target) {
-    return [(__bridge NBGLView*)target->params postRender];
-}
