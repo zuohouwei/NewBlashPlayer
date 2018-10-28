@@ -6,7 +6,7 @@
 //  Copyright © 2018 liu enbao. All rights reserved.
 //
 
-#import "NBGLView.h"
+#import "NBGenericGLView.h"
 #import "NBAVPlayer.h"
 #import <OpenGLES/EAGL.h>
 #import <QuartzCore/CAEAGLLayer.h>

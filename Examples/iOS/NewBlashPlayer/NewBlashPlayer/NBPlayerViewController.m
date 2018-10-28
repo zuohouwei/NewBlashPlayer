@@ -7,7 +7,7 @@
 //
 
 #import "NBPlayerViewController.h"
-#import <NBGLView.h>
+#import <NBGenericGLView.h>
 #import <NBAVPlayer.h>
 
 @interface NBPlayerViewController () <NBAVPlayerDelegate> {
