@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA07F1C521859D1D004A0D8E /* NBEnhancedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA07F1C321859D1D004A0D8E /* NBEnhancedViewController.m */; };
+		FA07F1C621859D1D004A0D8E /* NBEnhancedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA07F1C421859D1D004A0D8E /* NBEnhancedViewController.xib */; };
+		FA07F1C92185EC12004A0D8E /* NBGLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FA07F1C82185EC12004A0D8E /* NBGLESUtils.m */; };
+		FA07F1CC2185ECA9004A0D8E /* FragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = FA07F1CB2185ECA9004A0D8E /* FragmentShader.glsl */; };
+		FA07F1CE2185ECC5004A0D8E /* VertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = FA07F1CD2185ECC5004A0D8E /* VertexShader.glsl */; };
+		FA07F1D12185F3F3004A0D8E /* wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FA07F1D02185F3F3004A0D8E /* wood.jpg */; };
 		FA2777E2214FBD70007DD0B5 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA2777E1214FBD70007DD0B5 /* main.mm */; };
 		FA2777E5214FBD70007DD0B5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2777E4214FBD70007DD0B5 /* AppDelegate.m */; };
 		FA2777E8214FBD70007DD0B5 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2777E7214FBD70007DD0B5 /* RootViewController.m */; };
@@ -37,6 +43,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA07F1C221859D1D004A0D8E /* NBEnhancedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NBEnhancedViewController.h; sourceTree = "<group>"; };
+		FA07F1C321859D1D004A0D8E /* NBEnhancedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NBEnhancedViewController.m; sourceTree = "<group>"; };
+		FA07F1C421859D1D004A0D8E /* NBEnhancedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NBEnhancedViewController.xib; sourceTree = "<group>"; };
+		FA07F1C72185EC12004A0D8E /* NBGLESUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NBGLESUtils.h; sourceTree = "<group>"; };
+		FA07F1C82185EC12004A0D8E /* NBGLESUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NBGLESUtils.m; sourceTree = "<group>"; };
+		FA07F1CB2185ECA9004A0D8E /* FragmentShader.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = FragmentShader.glsl; sourceTree = "<group>"; };
+		FA07F1CD2185ECC5004A0D8E /* VertexShader.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
+		FA07F1D02185F3F3004A0D8E /* wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood.jpg; sourceTree = "<group>"; };
 		FA2777DD214FBD70007DD0B5 /* NewBlashPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewBlashPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA2777E1214FBD70007DD0B5 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		FA2777E3214FBD70007DD0B5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -83,6 +97,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA07F1BF21859C9D004A0D8E /* GenericPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				FA34375C214FE16100EDC73E /* NBPlayerViewController.h */,
+				FA34375D214FE16100EDC73E /* NBPlayerViewController.m */,
+				FA34375E214FE16100EDC73E /* NBPlayerViewController.xib */,
+			);
+			name = GenericPlayer;
+			sourceTree = "<group>";
+		};
+		FA07F1C121859CBE004A0D8E /* EnhancedPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				FA07F1CF2185F3E9004A0D8E /* images */,
+				FA07F1CA2185EC7C004A0D8E /* shaders */,
+				FA07F1C221859D1D004A0D8E /* NBEnhancedViewController.h */,
+				FA07F1C321859D1D004A0D8E /* NBEnhancedViewController.m */,
+				FA07F1C421859D1D004A0D8E /* NBEnhancedViewController.xib */,
+				FA07F1C72185EC12004A0D8E /* NBGLESUtils.h */,
+				FA07F1C82185EC12004A0D8E /* NBGLESUtils.m */,
+			);
+			name = EnhancedPlayer;
+			sourceTree = "<group>";
+		};
+		FA07F1CA2185EC7C004A0D8E /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				FA07F1CB2185ECA9004A0D8E /* FragmentShader.glsl */,
+				FA07F1CD2185ECC5004A0D8E /* VertexShader.glsl */,
+			);
+			name = shaders;
+			sourceTree = "<group>";
+		};
+		FA07F1CF2185F3E9004A0D8E /* images */ = {
+			isa = PBXGroup;
+			children = (
+				FA07F1D02185F3F3004A0D8E /* wood.jpg */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
 		FA08D356214FD20C0003E97E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,11 +175,10 @@
 		FA2777DF214FBD70007DD0B5 /* NewBlashPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				FA07F1C121859CBE004A0D8E /* EnhancedPlayer */,
+				FA07F1BF21859C9D004A0D8E /* GenericPlayer */,
 				FAF6DB4821515A4500F6E6AD /* NBNavigationViewController.h */,
 				FAF6DB4921515A4500F6E6AD /* NBNavigationViewController.m */,
-				FA34375C214FE16100EDC73E /* NBPlayerViewController.h */,
-				FA34375D214FE16100EDC73E /* NBPlayerViewController.m */,
-				FA34375E214FE16100EDC73E /* NBPlayerViewController.xib */,
 				FA2777E3214FBD70007DD0B5 /* AppDelegate.h */,
 				FA2777E4214FBD70007DD0B5 /* AppDelegate.m */,
 				FA2777E6214FBD70007DD0B5 /* RootViewController.h */,
@@ -228,9 +282,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA07F1D12185F3F3004A0D8E /* wood.jpg in Resources */,
+				FA07F1CE2185ECC5004A0D8E /* VertexShader.glsl in Resources */,
+				FA07F1C621859D1D004A0D8E /* NBEnhancedViewController.xib in Resources */,
 				FA2777F0214FBD70007DD0B5 /* LaunchScreen.storyboard in Resources */,
 				FA2777ED214FBD70007DD0B5 /* Assets.xcassets in Resources */,
 				FA2777EB214FBD70007DD0B5 /* Main.storyboard in Resources */,
+				FA07F1CC2185ECA9004A0D8E /* FragmentShader.glsl in Resources */,
 				FA343760214FE16100EDC73E /* NBPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,10 +300,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA07F1C521859D1D004A0D8E /* NBEnhancedViewController.m in Sources */,
 				FA2777E8214FBD70007DD0B5 /* RootViewController.m in Sources */,
 				FA2777E5214FBD70007DD0B5 /* AppDelegate.m in Sources */,
 				FAF6DB4A21515A4500F6E6AD /* NBNavigationViewController.m in Sources */,
 				FA2777E2214FBD70007DD0B5 /* main.mm in Sources */,
+				FA07F1C92185EC12004A0D8E /* NBGLESUtils.m in Sources */,
 				FA34375F214FE16100EDC73E /* NBPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,6 +431,8 @@
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/../../../NBMediaPlayer/platform/ios/interface";
 				INFOPLIST_FILE = NewBlashPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = ccsu.NewBlashPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -383,6 +445,8 @@
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/../../../NBMediaPlayer/platform/ios/interface";
 				INFOPLIST_FILE = NewBlashPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = ccsu.NewBlashPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

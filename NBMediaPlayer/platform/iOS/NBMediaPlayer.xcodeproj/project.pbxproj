@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FA07F1BB218583D5004A0D8E /* NBGenericGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2F215A82F600F77705 /* NBGenericGLView.mm */; };
+		FA07F1BE21859A4B004A0D8E /* NBEnhancedGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA07F1BC21859A4A004A0D8E /* NBEnhancedGLView.mm */; };
 		FA08D32A214FC75D0003E97E /* NBDataSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28C214FC75D0003E97E /* NBDataSource.cpp */; };
 		FA08D32B214FC75D0003E97E /* NBFFmpegSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28E214FC75D0003E97E /* NBFFmpegSource.cpp */; };
 		FA08D32C214FC75D0003E97E /* NBFFmpegADecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D291214FC75D0003E97E /* NBFFmpegADecoder.cpp */; };
@@ -153,6 +154,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FA07F1BC21859A4A004A0D8E /* NBEnhancedGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NBEnhancedGLView.mm; sourceTree = "<group>"; };
+		FA07F1BD21859A4B004A0D8E /* NBEnhancedGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBEnhancedGLView.h; sourceTree = "<group>"; };
 		FA08D27F214FC75D0003E97E /* NBCondition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBCondition.h; sourceTree = "<group>"; };
 		FA08D280214FC75D0003E97E /* NBList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBList.h; sourceTree = "<group>"; };
 		FA08D281214FC75D0003E97E /* NBMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBMacros.h; sourceTree = "<group>"; };
@@ -873,6 +876,8 @@
 		FA968F2B215A82F600F77705 /* interface */ = {
 			isa = PBXGroup;
 			children = (
+				FA07F1BD21859A4B004A0D8E /* NBEnhancedGLView.h */,
+				FA07F1BC21859A4A004A0D8E /* NBEnhancedGLView.mm */,
 				FA968F2C215A82F600F77705 /* NBAVPlayer.h */,
 				FA968F2D215A82F600F77705 /* NBAVPlayer.mm */,
 				FA968F2E215A82F600F77705 /* NBGenericGLView.h */,
@@ -1185,6 +1190,7 @@
 				FAF61DED216F1C1B00C85F54 /* rtpdec_qt.c in Sources */,
 				FAA7DF2C2177044A00D021AB /* stat.c in Sources */,
 				FAF61E24216F215500C85F54 /* urldecode.c in Sources */,
+				FA07F1BE21859A4B004A0D8E /* NBEnhancedGLView.mm in Sources */,
 				FA08D340214FC75D0003E97E /* NBMediaPlayer.cpp in Sources */,
 				FA08D336214FC75D0003E97E /* NBRBTree.cpp in Sources */,
 				FA08D331214FC75D0003E97E /* NBFFmpegExtractor.cpp in Sources */,

@@ -22,11 +22,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A9p-k1-D3R">
-                                <rect key="frame" x="128" y="302" width="118" height="62"/>
+                                <rect key="frame" x="128" y="238" width="118" height="62"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="EnterScene"/>
+                                <state key="normal" title="GenericScene"/>
                                 <connections>
-                                    <action selector="onEnterScene:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GdO-NF-mlb"/>
+                                    <action selector="onEnterGenericScene:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hde-nN-xpY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGY-72-SOm">
+                                <rect key="frame" x="125" y="318" width="125" height="58"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="EnhancedScene"/>
+                                <connections>
+                                    <action selector="onEnterEnhancedScene:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rp1-Aq-wro"/>
                                 </connections>
                             </button>
                         </subviews>

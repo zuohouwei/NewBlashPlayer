@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "NBPlayerViewController.h"
+#import "NBEnhancedViewController.h"
 
 @interface RootViewController () {
 
@@ -27,7 +28,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)onEnterScene:(id)sender {
+- (IBAction)onEnterEnhancedScene:(id)sender {
+    NBEnhancedViewController* _enhancedViewController = [[NBEnhancedViewController alloc] initWithNibName:@"NBEnhancedViewController" bundle:nil];
+    [self presentViewController:_enhancedViewController animated:YES completion:nil];
+}
+
+- (IBAction)onEnterGenericScene:(id)sender {
     NBPlayerViewController* _playerViewControler = [[NBPlayerViewController alloc] initWithNibName:@"NBPlayerViewController" bundle:nil];
     
     [self presentViewController:_playerViewControler animated:YES completion:nil];

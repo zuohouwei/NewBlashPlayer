@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, NBVideoGravity) {
 
 @class NBAVPlayer;
 
-@interface NBGLView : UIView
+@interface NBGenericGLView : UIView
 
 @property (nonatomic, retain) NBAVPlayer* player;
 

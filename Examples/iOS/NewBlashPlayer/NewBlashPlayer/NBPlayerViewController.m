@@ -13,16 +13,16 @@
 @interface NBPlayerViewController () <NBAVPlayerDelegate> {
     NSTimer* _seekTime;
 }
-@property (weak, nonatomic) IBOutlet NBGLView *nbGLView;
+@property (weak, nonatomic) IBOutlet NBGenericGLView *nbGLView;
 @property (strong, nonatomic) NBAVPlayer* nbAVPlayer;
 
 @end
 
 @implementation NBPlayerViewController
 
-- (void)loadView {
-    self.view = _nbGLView = [[NBGLView alloc] init];
-}
+//- (void)loadView {
+//    self.view = _nbGLView = [[NBGLView alloc] init];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -60,11 +60,7 @@
 }
 
 - (void)mediaPlayer:(NBAVPlayer *)player error:(id)arg {
-    [_nbAVPlayer stop];
-    [_nbAVPlayer releaseAll];
-    _nbAVPlayer = nil;
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self onBackClicked:nil];
 }
 
 // back button clicked

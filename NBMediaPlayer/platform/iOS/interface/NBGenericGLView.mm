@@ -17,7 +17,7 @@
 
 #include <NBMediaPlayer.h>
 
-@interface NBGLView () <NBRenderProtocol> {
+@interface NBGenericGLView () <NBRenderProtocol> {
     GLuint defaultFrameBuffer;
     GLuint colorRenderBuffer;
     GLint backingWidth;
@@ -41,7 +41,7 @@
 
 @end
 
-@implementation NBGLView
+@implementation NBGenericGLView
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
