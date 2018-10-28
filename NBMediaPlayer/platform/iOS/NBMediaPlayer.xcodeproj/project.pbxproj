@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA07F1BB218583D5004A0D8E /* NBGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2F215A82F600F77705 /* NBGLView.mm */; };
 		FA08D32A214FC75D0003E97E /* NBDataSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28C214FC75D0003E97E /* NBDataSource.cpp */; };
 		FA08D32B214FC75D0003E97E /* NBFFmpegSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28E214FC75D0003E97E /* NBFFmpegSource.cpp */; };
 		FA08D32C214FC75D0003E97E /* NBFFmpegADecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D291214FC75D0003E97E /* NBFFmpegADecoder.cpp */; };
@@ -51,9 +52,8 @@
 		FA4739C321717A910006034B /* NBLogAppender.c in Sources */ = {isa = PBXBuildFile; fileRef = FA4739BB21717A910006034B /* NBLogAppender.c */; };
 		FA4739C421717A910006034B /* NBLogConsoleAppender.c in Sources */ = {isa = PBXBuildFile; fileRef = FA4739BD21717A910006034B /* NBLogConsoleAppender.c */; };
 		FA4739C521717A910006034B /* NBLogMFileAppender.c in Sources */ = {isa = PBXBuildFile; fileRef = FA4739BF21717A910006034B /* NBLogMFileAppender.c */; };
-		FA61AA3D218038500009446C /* NBGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2F215A82F600F77705 /* NBGLView.mm */; };
 		FA61AA3E218039A30009446C /* NBRenderContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA89DB0C218033D6001ED81E /* NBRenderContext.mm */; };
-		FA968F30215A82F600F77705 /* NBAVPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2D215A82F600F77705 /* NBAVPlayer.mm */; settings = {COMPILER_FLAGS = "-force_load"; }; };
+		FA968F30215A82F600F77705 /* NBAVPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2D215A82F600F77705 /* NBAVPlayer.mm */; };
 		FA968F36215A842100F77705 /* NBVideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA968F35215A842100F77705 /* NBVideoRenderer.cpp */; };
 		FA968FE7215D0C1D00F77705 /* NBBeastSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA968FE5215D0C1D00F77705 /* NBBeastSource.cpp */; };
 		FA969007215DE39F00F77705 /* DELooperEV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA968FF0215DE39F00F77705 /* DELooperEV.cpp */; };
@@ -1134,8 +1134,8 @@
 				FAF61DF2216F1C1B00C85F54 /* rtpdec_jpeg.c in Sources */,
 				FA4739AB2170D0F60006034B /* h2645_parse.c in Sources */,
 				FA32EF0F216F0FBE00F5C8FF /* protocols.c in Sources */,
-				FA61AA3D218038500009446C /* NBGLView.mm in Sources */,
 				FA969010215DE39F00F77705 /* DECurlTask.cpp in Sources */,
+				FA07F1BB218583D5004A0D8E /* NBGLView.mm in Sources */,
 				FAA7DEC72176F93B00D021AB /* zipfile.c in Sources */,
 				FA08D333214FC75D0003E97E /* NBAtomic.cpp in Sources */,
 				FAA7DF262177044A00D021AB /* file.c in Sources */,

@@ -28,7 +28,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="6OM-ZY-M0v">
                             <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pYi-zV-ZqY" customClass="NBGLView">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pYi-zV-ZqY">
                                     <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="70h-2Q-ipi" userLabel="HeaderView">

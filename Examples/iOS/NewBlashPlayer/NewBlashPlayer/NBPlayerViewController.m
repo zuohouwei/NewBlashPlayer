@@ -20,6 +20,10 @@
 
 @implementation NBPlayerViewController
 
+- (void)loadView {
+    self.view = _nbGLView = [[NBGLView alloc] init];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.

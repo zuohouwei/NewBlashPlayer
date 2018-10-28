@@ -98,25 +98,7 @@
     return TRUE;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super initWithCoder:aDecoder]) {
-        if (![self initGLContext]) {
-            return nil;
-        }
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        if (![self initGLContext]) {
-            return nil;
-        }
-    }
-    return self;
-}
-
-- (void)dealloc {
+- (void)deinitGLContext {
     if (defaultFrameBuffer) {
         glDeleteFramebuffers(1, &defaultFrameBuffer);
         defaultFrameBuffer = 0;
@@ -133,6 +115,40 @@
     _glContext = nil;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+//        if (![self initGLContext]) {
+//            return nil;
+//        }
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+//        if (![self initGLContext]) {
+//            return nil;
+//        }
+    }
+    return self;
+}
+
+- (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    
+    [self initGLContext];
+}
+
+- (void)removeFromSuperview {
+    [self deinitGLContext];
+    
+    [super removeFromSuperview];
+}
+
+- (void)dealloc {
+    
+}
+
 - (void)setPlayer:(NBAVPlayer *)player {
     if (player == NULL) {
         return ;
@@ -145,6 +161,24 @@
 
 - (NBAVPlayer*)player {
     return _player;
+}
+
+- (void)setVideoGravity:(NBVideoGravity)videoGravity {
+    if (videoGravity == NBVideoGravityUnknow) {
+        return ;
+    }
+    
+    if (videoGravity == _curVideoGravity) {
+        return ;
+    }
+    _preferVideoGravity = videoGravity;
+    
+    NBMediaPlayer* mp = (NBMediaPlayer*)[_player playerInternal];
+    mp->invalidateRenderer();
+}
+
+- (NBVideoGravity)videoGravity {
+    return _curVideoGravity;
 }
 
 - (nb_status_t)prepareRendererCtx {
@@ -201,6 +235,8 @@
                     _renderInfo.height = backingHeight;
                 }
                 break;
+            default:
+                break;
         }
         _curVideoGravity = _preferVideoGravity;
     }
@@ -226,26 +262,8 @@
     return (__bridge void*)_glContext;
 }
 
-- (NBVideoGravity)videoGravity {
-    return _curVideoGravity;
-}
-
-- (void)setVideoGravity:(NBVideoGravity)videoGravity {
-    if (videoGravity == NBVideoGravityUnknow) {
-        return ;
-    }
-    
-    if (videoGravity == _curVideoGravity) {
-        return ;
-    }
-    _preferVideoGravity = videoGravity;
-    
-    NBMediaPlayer* mp = (NBMediaPlayer*)[_player playerInternal];
-    mp->invalidateRenderer();
-}
-
 @end
 
-// this is important, force linker to load this file
-#include "NBRenderContext.mm"
+//// this is important, force linker to load this file
+//#include "NBRenderContext.mm"
 
