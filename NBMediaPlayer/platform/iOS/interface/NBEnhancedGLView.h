@@ -42,6 +42,12 @@ static int RENDERMODE_CONTINUOUSLY = 1;
 
 @end
 
+@protocol NBGLTextureAvailable<NSObject>
+
+- (void)glTextureAvailable:(int)texName;
+
+@end
+
 typedef void (^NBEventRunnable)(void);
 
 @interface NBEnhancedGLView : UIView
@@ -51,6 +57,8 @@ typedef void (^NBEventRunnable)(void);
 @property (readonly, nonatomic, getter=getContext) EAGLContext* context;
 
 - (void)setRenderer:(id<NBGLRenderer>)renderer;
+
+- (void)setTextureAvailable:(id<NBGLTextureAvailable>)textureAvailable;
 
 /**
  * For multisample support on Apple platform

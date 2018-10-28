@@ -103,7 +103,7 @@ NBGLYUV420PRenderer::~NBGLYUV420PRenderer() {
 
 nb_status_t NBGLYUV420PRenderer::start(NBMetaData* metaData) {
     //call base start first
-    NBGLVideoRenderer::start(NULL);
+    NBGLVideoRenderer::start(metaData);
 
     mProgramHandle = NBGLShaderUtils::LoadShaders(yuv420pVertexShaderString, yuv420pFragmentShaderString);
 

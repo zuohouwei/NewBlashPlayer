@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FA07F1BB218583D5004A0D8E /* NBGenericGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA968F2F215A82F600F77705 /* NBGenericGLView.mm */; };
 		FA07F1BE21859A4B004A0D8E /* NBEnhancedGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA07F1BC21859A4A004A0D8E /* NBEnhancedGLView.mm */; };
+		FA07F1D42185F86B004A0D8E /* NBGLFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA07F1D32185F86B004A0D8E /* NBGLFrameBuffer.cpp */; };
 		FA08D32A214FC75D0003E97E /* NBDataSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28C214FC75D0003E97E /* NBDataSource.cpp */; };
 		FA08D32B214FC75D0003E97E /* NBFFmpegSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D28E214FC75D0003E97E /* NBFFmpegSource.cpp */; };
 		FA08D32C214FC75D0003E97E /* NBFFmpegADecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA08D291214FC75D0003E97E /* NBFFmpegADecoder.cpp */; };
@@ -156,6 +157,8 @@
 /* Begin PBXFileReference section */
 		FA07F1BC21859A4A004A0D8E /* NBEnhancedGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NBEnhancedGLView.mm; sourceTree = "<group>"; };
 		FA07F1BD21859A4B004A0D8E /* NBEnhancedGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBEnhancedGLView.h; sourceTree = "<group>"; };
+		FA07F1D32185F86B004A0D8E /* NBGLFrameBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NBGLFrameBuffer.cpp; sourceTree = "<group>"; };
+		FA07F1D52185FC34004A0D8E /* NBGLFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBGLFrameBuffer.h; sourceTree = "<group>"; };
 		FA08D27F214FC75D0003E97E /* NBCondition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBCondition.h; sourceTree = "<group>"; };
 		FA08D280214FC75D0003E97E /* NBList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBList.h; sourceTree = "<group>"; };
 		FA08D281214FC75D0003E97E /* NBMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBMacros.h; sourceTree = "<group>"; };
@@ -608,6 +611,8 @@
 				FA08D2C2214FC75D0003E97E /* NBGLYUV420PRenderer.h */,
 				FAF6DB4F2152A63100F6E6AD /* NBCVOpenGLESRenderer.cpp */,
 				FAF6DB502152A63100F6E6AD /* NBCVOpenGLESRenderer.h */,
+				FA07F1D32185F86B004A0D8E /* NBGLFrameBuffer.cpp */,
+				FA07F1D52185FC34004A0D8E /* NBGLFrameBuffer.h */,
 			);
 			path = renderer;
 			sourceTree = "<group>";
@@ -1134,6 +1139,7 @@
 				FA08D33A214FC75D0003E97E /* NBAudioFrame.cpp in Sources */,
 				FA96900A215DE39F00F77705 /* DEDataManager.cpp in Sources */,
 				FA08D341214FC75D0003E97E /* NBVideoFrame.cpp in Sources */,
+				FA07F1D42185F86B004A0D8E /* NBGLFrameBuffer.cpp in Sources */,
 				FAF61DF0216F1C1B00C85F54 /* rtpdec_vp9.c in Sources */,
 				FAF61E22216F211200C85F54 /* udp.c in Sources */,
 				FAF61DF2216F1C1B00C85F54 /* rtpdec_jpeg.c in Sources */,

@@ -20,7 +20,9 @@ static GLfloat vertices[] = {
     0.5f,  0.5f, 0.0f, 1.0f, 0.0f,   // 右上
 };
 
-@interface NBEnhancedViewController () <NBGLRenderer, NBAVPlayerDelegate> {
+@interface NBEnhancedViewController () <NBGLRenderer,
+                                        NBAVPlayerDelegate,
+                                        NBGLTextureAvailable> {
     // the program handle
     GLuint _programHandle;
     
@@ -40,6 +42,7 @@ static GLfloat vertices[] = {
 - (void)loadView {
     [super loadView];
     [_nbEnhancedView setRenderer:self];
+    [_nbEnhancedView setTextureAvailable:self];
 }
 
 - (void)viewDidLoad {
@@ -57,10 +60,9 @@ static GLfloat vertices[] = {
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"http://127.0.0.1:8989/The_Innocents_01_01.mp4"] params:nil];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"rtmp://127.0.0.1/live/sallar"] params:nil];
 //    [_nbAVPlayer setDataSource:[NSURL URLWithString:@"rtsp://127.0.0.1:8554/Friends.mkv"] params:nil];
-//    [_nbAVPlayer setVideoOutput:_nbGLView];
-//    [_nbEnhancedView setPlayer:_nbAVPlayer];
-//    _nbAVPlayer.delegate = self;
-//    [_nbAVPlayer prepareAsync];
+    [_nbEnhancedView setPlayer:_nbAVPlayer];
+    _nbAVPlayer.delegate = self;
+    [_nbAVPlayer prepareAsync];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,30 +120,32 @@ static GLfloat vertices[] = {
 
 - (void)setupTexure
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"wood" ofType:@"jpg"];
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"wood" ofType:@"jpg"];
+//
+//    int width;
+//    int height;
+//
+//    UIImage *image = [UIImage imageWithContentsOfFile:path];
+//
+//    width = image.size.width;
+//    height = image.size.height;
+//
+//    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+//    void *imageData = malloc( height * width * 4 );
+//    CGContextRef image_context = CGBitmapContextCreate( imageData, width, height, 8, 4 * width, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big );
+//    CGColorSpaceRelease( colorSpace );
+//    CGContextClearRect( image_context, CGRectMake( 0, 0, width, height ) );
+//    CGContextTranslateCTM( image_context, 0, height - height );
+//    CGContextDrawImage( image_context, CGRectMake( 0, 0, width, height ), image.CGImage );
+//
+//    // Create Texture
+//    _texture = [NBGLESUtils createTexture2D:GL_RGBA width:width height:height data:imageData];
+//
+//    if (imageData != NULL) {
+//        free(imageData);
+//    }
     
-    int width;
-    int height;
-    
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
-    
-    width = image.size.width;
-    height = image.size.height;
-    
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    void *imageData = malloc( height * width * 4 );
-    CGContextRef image_context = CGBitmapContextCreate( imageData, width, height, 8, 4 * width, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big );
-    CGColorSpaceRelease( colorSpace );
-    CGContextClearRect( image_context, CGRectMake( 0, 0, width, height ) );
-    CGContextTranslateCTM( image_context, 0, height - height );
-    CGContextDrawImage( image_context, CGRectMake( 0, 0, width, height ), image.CGImage );
-
-    // Create Texture
-    _texture = [NBGLESUtils createTexture2D:GL_RGBA width:width height:height data:imageData];
-    
-    if (imageData != NULL) {
-        free(imageData);
-    }
+    _texture = 0;
 }
 
 - (void)unsetupTexture {
@@ -168,11 +172,18 @@ static GLfloat vertices[] = {
     NSLog(@"glRenderSizeChanged");
 }
 
+- (void)glTextureAvailable:(int)texName {
+    _texture = texName;
+}
+
 - (void)glRenderDrawFrame:(NBEnhancedGLView*)view {
     // 激活纹理
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, _texture);
-    glUniform1i(glGetUniformLocation(_programHandle, "image"), 0);
+    
+    if (_texture != 0) {
+        glBindTexture(GL_TEXTURE_2D, _texture);
+        glUniform1i(glGetUniformLocation(_programHandle, "image"), 0);
+    }
     
     glDrawArrays(GL_TRIANGLES, 0, _vertCount);
 }

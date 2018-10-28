@@ -147,10 +147,29 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
 - (BOOL)createFramebuffer;
 - (void)deleteFramebuffer;
 
+- (void)onGLTextureAvailable:(int)texName;
+
 // Handle the renderer
 @property (nonatomic, weak) id<NBGLRenderer> renderer;
+@property (nonatomic, weak) id<NBGLTextureAvailable> textureAvailable;
 
 @end
+
+class NBEnhancedFrameListener: public NBFrameAvailableListener {
+public:
+    NBEnhancedFrameListener(NBEnhancedGLView* enhancedGLView) {
+        this->enhancedGLView = enhancedGLView;
+    }
+    
+public:
+    virtual void onGLTextureAvailable(int texName) {
+        if ([enhancedGLView respondsToSelector:@selector(onGLTextureAvailable:)]) {
+            [enhancedGLView onGLTextureAvailable:texName];
+        }
+    }
+private:
+    __weak NBEnhancedGLView* enhancedGLView;
+};
 
 @implementation NBEnhancedGLView
 
@@ -259,6 +278,7 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
     }
     NBMediaPlayer* mp = (NBMediaPlayer*)[player playerInternal];
     _renderTarget.params = (__bridge void*)self;
+    _renderTarget.fListener = new NBEnhancedFrameListener(self);
     mp->setVideoOutput(&_renderTarget);
     _player = player;
 }
@@ -322,6 +342,9 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
     } else {
         [mGLThread surfaceDestroy];
         
+        // remove the framebuffer
+        [self deleteFramebuffer];
+        
         if (mGLThread != nil) {
             [mGLThread requestExitAndWait];
         }
@@ -340,8 +363,6 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
 
 - (void)removeFromSuperview {
     NSLog(@"removeFromSuperview enter");
-    // remove the framebuffer
-    [self deleteFramebuffer];
     
     [super removeFromSuperview];
     
@@ -541,6 +562,12 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
     GL_ASSERT( glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer) );
 }
 
+- (void)onGLTextureAvailable:(int)texName {
+    if ([_textureAvailable respondsToSelector:@selector(glTextureAvailable:)]) {
+        [_textureAvailable glTextureAvailable:texName];
+    }
+}
+
 #pragma public interface begin
 
 - (void)setMultiSampelsCount:(int)samplesCount {
@@ -584,6 +611,10 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
     [mGLThread start];
 }
 
+- (void)setTextureAvailable:(id<NBGLTextureAvailable>)textureAvailable {
+    _textureAvailable = textureAvailable;
+}
+
 #pragma nbavplayer callback begin
 
 - (nb_status_t)prepareRendererCtx {
@@ -601,10 +632,13 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
 
 - (nb_status_t)preRender:(NBRenderInfo*)info {
     // TODO: need to check if render is correctly settup
-    [EAGLContext setCurrentContext:playerContext];
+    if ([EAGLContext currentContext] != playerContext) {
+        [EAGLContext setCurrentContext:playerContext];
+        NSLog(@"preRender end of frame\n");
+    }
     
-    [self prepareBindBuffers];
-    
+//    [self prepareBindBuffers];
+//
 //    glBindFramebuffer(GL_FRAMEBUFFER, defaultFrameBuffer);
 //    if (_curVideoGravity != _preferVideoGravity) {
 //        NBMediaPlayer* mp = (NBMediaPlayer*)[_player playerInternal];
@@ -663,12 +697,10 @@ static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
 }
 
 - (nb_status_t)postRender {
-    [self postBindBuffers];
-    
+//    [self postBindBuffers];
 //    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT, GL_COLOR_ATTACHMENT0};
 //    glDiscardFramebufferEXT(GL_FRAMEBUFFER, 2, discards);
-    
-    [playerContext presentRenderbuffer:GL_RENDERBUFFER];
+//    [playerContext presentRenderbuffer:GL_RENDERBUFFER];
     return OK;
 }
 

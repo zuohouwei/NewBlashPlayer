@@ -713,7 +713,7 @@ nb_status_t NBMediaPlayer::initVideoRenderer_l() {
         mVideoRenderer->setVideoOutput(mVideoOutput);
 
         //setup the opengl context
-        mVideoRenderer->start();
+        mVideoRenderer->start(metaData);
     }
     return OK;
 }

@@ -91,7 +91,7 @@ NBCVOpenGLESRenderer::~NBCVOpenGLESRenderer() {
 
 nb_status_t NBCVOpenGLESRenderer::start(NBMetaData* metaData) {
     //call base start first
-    NBGLVideoRenderer::start(NULL);
+    NBGLVideoRenderer::start(metaData);
     
     mProgramHandle = NBGLShaderUtils::LoadShaders(nv12VertexShaderString, nv12FragmentShaderString);
     OPENGLES2_CHECK();

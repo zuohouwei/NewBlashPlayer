@@ -6,6 +6,7 @@
 #define NBGLVIDEORENDERER_H
 
 #include "NBVideoRenderer.h"
+#include "NBGLFrameBuffer.h"
 
 #ifdef BUILD_TARGET_LINUX64
 #define GL_GLEXT_PROTOTYPES
@@ -78,6 +79,9 @@ protected:
     
     // the result output video coord
     float mVideoVertexsCoord[8];
+    
+    // the render texture object
+    NBGLFrameBuffer mGLFrameBuffer;
 };
 
 #endif //NBGLVIDEORENDERER_H

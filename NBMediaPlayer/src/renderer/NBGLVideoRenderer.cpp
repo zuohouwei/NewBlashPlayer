@@ -136,10 +136,22 @@ void NBGLVideoRenderer::setVideoOutput(NBRendererTarget* vo) {
 
 nb_status_t NBGLVideoRenderer::start(NBMetaData* metaData) {
     prepareRendererCtx(mVideoOutput);
+    
+    if (mVideoOutput->fListener != NULL) {
+        int width = 0;
+        int height = 0;
+        metaData->findInt32(kKeyWidth, &width);
+        metaData->findInt32(kKeyHeight, &height);
+        
+        mGLFrameBuffer.setupFBO(width, height, 9);
+    }
     return OK;
 }
 
 nb_status_t NBGLVideoRenderer::stop() {
+    if (mVideoOutput->fListener != NULL) {
+        mGLFrameBuffer.unsetupFBO();
+    }
     destroyRendererCtx(mVideoOutput);
     return OK;
 }
@@ -149,12 +161,24 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
 
     preRender(mVideoOutput, &info);
 
-    glViewport(info.x, info.y, info.width, info.height);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (mVideoOutput->fListener != NULL) {
+        mGLFrameBuffer.bind();
+    } else {
+        glViewport(info.x, info.y, info.width, info.height);
+    }
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     displayFrameImpl(mediaBuffer, info.width, info.height);
+    
+    if (mVideoOutput->fListener != NULL) {
+        mGLFrameBuffer.unbind();
+    }
 
     postRender(mVideoOutput);
+    
+    if (mVideoOutput->fListener != NULL) {
+        mVideoOutput->fListener->onGLTextureAvailable(mGLFrameBuffer.getNativeTextureId());
+    }
 
     return OK;
 }

@@ -7,6 +7,15 @@
 
 #include <NBMacros.h>
 
+class NBFrameAvailableListener {
+public:
+    virtual ~NBFrameAvailableListener() {
+    }
+    
+public:
+    virtual void onGLTextureAvailable(int texName) = 0;
+};
+
 #ifdef BUILD_TARGET_LINUX64
 #include <X11/Xlib.h>
 typedef struct NBRendererTarget {
@@ -17,7 +26,8 @@ typedef struct NBRendererTarget {
 } NBRendererTarget;
 #elif BUILD_TARGET_IOS
 typedef struct NBRendererTarget {
-   void* params;
+    void* params;
+    NBFrameAvailableListener* fListener;
 } NBRendererTarget;
 #elif BUILD_TARGET_ANDROID
 #include <android/native_window.h> // requires ndk r5 or newer
