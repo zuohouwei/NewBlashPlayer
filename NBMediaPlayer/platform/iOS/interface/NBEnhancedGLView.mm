@@ -13,6 +13,8 @@
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
 
+#import <libkern/OSAtomic.h>
+
 #import "NBRenderContext.h"
 
 #include <NBMediaPlayer.h>
@@ -56,6 +58,9 @@ static GLenum g_gl_error_code = GL_NO_ERROR;
 #endif
 
 static NSCondition* sGLThreadManager = [[NSCondition alloc] init];
+// This is lock for multithreading rendering
+// warning : spinlock is not safe lock in iOS, not blocking long time in locking code must be promise
+static OSSpinLock renderingLock = OS_SPINLOCK_INIT;
 
 #pragma NSGLThread declare begin
 
@@ -233,6 +238,7 @@ private:
     multisampleDepthbuffer = 0;
     
     mDetached = NO;
+    
     return YES;
 }
 
@@ -628,14 +634,15 @@ private:
     if ([EAGLContext currentContext] == playerContext) {
         [EAGLContext setCurrentContext:nil];
     }
+    playerContext = nil;
 }
 
 - (nb_status_t)preRender:(NBRenderInfo*)info {
     // TODO: need to check if render is correctly settup
-    if ([EAGLContext currentContext] != playerContext) {
+//    if ([EAGLContext currentContext] != playerContext) {
         [EAGLContext setCurrentContext:playerContext];
-        NSLog(@"preRender end of frame\n");
-    }
+//        NSLog(@"preRender end of frame\n");
+//    }
     
 //    [self prepareBindBuffers];
 //
@@ -693,6 +700,9 @@ private:
     _renderInfo.height = framebufferHeight;
     
     *info = _renderInfo;
+    
+    OSSpinLockLock(&renderingLock);
+    
     return OK;
 }
 
@@ -701,6 +711,9 @@ private:
 //    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT, GL_COLOR_ATTACHMENT0};
 //    glDiscardFramebufferEXT(GL_FRAMEBUFFER, 2, discards);
 //    [playerContext presentRenderbuffer:GL_RENDERBUFFER];
+    
+    OSSpinLockUnlock(&renderingLock);
+    
     return OK;
 }
 
@@ -1161,7 +1174,9 @@ private:
         // do real draw callback
         {
             if ([mWeakGLView.renderer respondsToSelector:@selector(glRenderDrawFrame:)]) {
+                OSSpinLockLock(&renderingLock);
                 [mWeakGLView.renderer glRenderDrawFrame:mWeakGLView];
+                OSSpinLockUnlock(&renderingLock);
             }
         }
         

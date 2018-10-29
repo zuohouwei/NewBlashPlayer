@@ -269,8 +269,8 @@ nb_status_t NBCVOpenGLESRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, i
     
     memcpy(mVideoVertexsCoord, InitVertexsCoord, sizeof(InitVertexsCoord));
     
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+//    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+//    glClear(GL_COLOR_BUFFER_BIT);
     OPENGLES2_CHECK();
     
     glUniformMatrix3fv(mSample2TextureSlot, 1, GL_FALSE, _preferredConversion);

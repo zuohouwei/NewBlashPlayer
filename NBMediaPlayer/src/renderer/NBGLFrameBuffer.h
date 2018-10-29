@@ -45,6 +45,8 @@ private:
     
     GLint mDefaultFBO;
     GLint mDefaultRenderBuffer;
+    
+    int mStage;
 };
 
 #endif /* NBFRAMEBUFFER_H */

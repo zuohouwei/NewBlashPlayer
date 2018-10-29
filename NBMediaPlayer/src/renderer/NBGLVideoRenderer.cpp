@@ -143,7 +143,7 @@ nb_status_t NBGLVideoRenderer::start(NBMetaData* metaData) {
         metaData->findInt32(kKeyWidth, &width);
         metaData->findInt32(kKeyHeight, &height);
         
-        mGLFrameBuffer.setupFBO(width, height, 9);
+        mGLFrameBuffer.setupFBO(width, height, 3);
     }
     return OK;
 }
@@ -171,6 +171,8 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
     displayFrameImpl(mediaBuffer, info.width, info.height);
     
     if (mVideoOutput->fListener != NULL) {
+        // must call glFlush at end of draw
+        glFlush();
         mGLFrameBuffer.unbind();
     }
 
