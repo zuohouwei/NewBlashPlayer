@@ -34,6 +34,10 @@ nb_status_t NBMediaCodecVRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
     return OK;
 }
 
+void NBMediaCodecVRenderer::invalidate() {
+
+}
+
 nb_status_t NBMediaCodecVRenderer::start(NBMetaData* metaData) {
     //do nothing at all
     return OK;

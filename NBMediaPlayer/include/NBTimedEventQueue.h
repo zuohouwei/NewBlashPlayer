@@ -12,7 +12,22 @@
 
 #include <NBCondition.h>
 
+#ifdef BUILD_TARGET_ANDROID
+#include <jni.h>
+#endif
+
 struct NBTimedEventQueue {
+
+    enum QueueBackend {
+        BACKEND_TYPE_PTHREAD,
+#ifdef BUILD_TARGET_ANDROID
+        BACKEND_TYPE_LOOPER,
+#endif
+    };
+
+#ifdef BUILD_TARGET_ANDROID
+    jobject mLooperManager;
+#endif
 
     typedef int32_t event_id;
 
@@ -53,6 +68,10 @@ struct NBTimedEventQueue {
 
     NBTimedEventQueue();
     ~NBTimedEventQueue();
+
+    void setQueueBackend(QueueBackend backend) {
+        mBackend = backend;
+    }
 
     // Start executing the event loop.
     void start();
@@ -129,6 +148,8 @@ private:
 
     bool mRunning;
     bool mStopped;
+
+    QueueBackend mBackend;
 
     static void *ThreadWrapper(void *me);
     void threadEntry();

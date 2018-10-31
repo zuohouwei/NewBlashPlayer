@@ -15,6 +15,8 @@ public:
 public:
     virtual nb_status_t displayFrame(NBMediaBuffer* mediaBuffer);
 
+    virtual void invalidate();
+
 public:
     virtual nb_status_t start(NBMetaData* metaData = NULL);
     virtual nb_status_t stop();

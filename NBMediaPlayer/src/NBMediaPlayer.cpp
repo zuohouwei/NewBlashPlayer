@@ -127,9 +127,13 @@ NBMediaPlayer::NBMediaPlayer()
 ,mFlags(0) {
     
 //    download_engine_init(NULL, 0);
-    
+
     mQueue.setQueueName(NBString("NBMediaPlayer"));
-    
+
+#ifdef BUILD_TARGET_ANDROID
+    mQueue.setQueueBackend(NBTimedEventQueue::BACKEND_TYPE_LOOPER);
+#endif
+
     mVideoEvent = new NBMediaPlayerEvent(this, &NBMediaPlayer::onVideoEvent);
     mVideoEventPending = false;
     

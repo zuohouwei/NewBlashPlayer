@@ -34,6 +34,7 @@ typedef struct NBRendererTarget {
 #include <EGL/egl.h>
 typedef struct NBRendererTarget {
     void* params;
+    NBFrameAvailableListener* fListener;
     EGLDisplay _display;
     EGLSurface _surface;
     EGLContext _context;

@@ -6,12 +6,33 @@
 
 #ifdef BUILD_TARGET_ANDROID
 #include <jni.h>
+#include <Custom/NBLooperManager.h>
+#include <JNIUtils.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+JNIEXPORT void JNICALL Java_com_ccsu_nbmediaplayer_NBLooperManager_nativeRunEvent(JNIEnv* env,
+                            jobject thiz, jlong eventQueuePtr, jint eventId, jlong timeUs) {
+    NBTimedEventQueue* timedEventQueue = reinterpret_cast<NBTimedEventQueue*>(eventQueuePtr);
+    timedEventQueue->runEvent(eventId, timeUs);
+}
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 NBTimedEventQueue::NBTimedEventQueue()
         : mNextEventID(1)
         ,mRunning(false)
         ,mStopped(false)
+        ,mBackend(BACKEND_TYPE_PTHREAD)
+#ifdef BUILD_TARGET_ANDROID
+        ,mLooperManager(NULL)
+#endif
 {
     INIT_LIST_HEAD(&mQueue);
 }
@@ -37,6 +58,13 @@ void NBTimedEventQueue::start() {
 
     pthread_attr_destroy(&attr);
 
+#ifdef BUILD_TARGET_ANDROID
+    if (mBackend == BACKEND_TYPE_LOOPER) {
+        NBAutoMutex autoLock(mLock);
+        mEventThreadStartedCondition.wait(mLock);
+    }
+#endif
+
     mRunning = true;
 }
 
@@ -47,11 +75,19 @@ void NBTimedEventQueue::stop(bool flush) {
 
     NBTimedEventQueue::Event* stopEvent = new StopEvent();
 
-    if (flush) {
-        postEventToBack(stopEvent);
+#ifdef BUILD_TARGET_ANDROID
+    if (mBackend == BACKEND_TYPE_LOOPER) {
+        ASDK_NBLooperManager_quit(getJNIEnv(), mLooperManager);
     } else {
-        postTimedEvent(stopEvent, INT64_MIN);
+#endif
+        if (flush) {
+            postEventToBack(stopEvent);
+        } else {
+            postTimedEvent(stopEvent, INT64_MIN);
+        }
+#ifdef BUILD_TARGET_ANDROID
     }
+#endif
 
     void *dummy;
     pthread_join(mThread, &dummy);
@@ -81,6 +117,11 @@ NBTimedEventQueue::event_id NBTimedEventQueue::postEventToBack(
 
 NBTimedEventQueue::event_id NBTimedEventQueue::postEventWithDelay(
         const Event *event, int64_t delay_us) {
+#ifdef BUILD_TARGET_ANDROID
+    if (mBackend == BACKEND_TYPE_LOOPER) {
+        return postTimedEvent(event, delay_us);
+    }
+#endif
     return postTimedEvent(event, getRealTimeUs() + delay_us);
 }
 
@@ -101,13 +142,21 @@ NBTimedEventQueue::event_id NBTimedEventQueue::postTimedEvent(
     item->event = event;
     item->realtime_us = realtime_us;
 
-    if (list_empty(&mQueue)) {
-        mQueueHeadChangedCondition.signal();
-    }
-
     list_add(&item->list, pos);
 
-    mQueueNotEmptyCondition.signal();
+#ifdef BUILD_TARGET_ANDROID
+    if (mBackend == BACKEND_TYPE_LOOPER) {
+        ASDK_NBLooperManager_queueRunnableAtTime(getJNIEnv(), mLooperManager, (jlong)this, event->eventID(), realtime_us);
+    } else {
+#endif
+        if (list_empty(&mQueue)) {
+            mQueueHeadChangedCondition.signal();
+        }
+
+        mQueueNotEmptyCondition.signal();
+#ifdef BUILD_TARGET_ANDROID
+        }
+#endif
 
     return event->eventID();
 }
@@ -155,9 +204,17 @@ void NBTimedEventQueue::cancelEvents(
             continue;
         }
 
-        if (cancelFirst) {
-            mQueueHeadChangedCondition.signal();
+#ifdef BUILD_TARGET_ANDROID
+        if (mBackend == BACKEND_TYPE_LOOPER) {
+            ASDK_NBLooperManager_removeRunnableWithId(getJNIEnv(), mLooperManager, dummyItem->event->eventID());
+        } else {
+#endif
+            if (cancelFirst) {
+                mQueueHeadChangedCondition.signal();
+            }
+#ifdef BUILD_TARGET_ANDROID
         }
+#endif
 
         dummyItem->event->setEventID(0);
         list_del(&dummyItem->list);
@@ -231,81 +288,100 @@ void NBTimedEventQueue::threadEntry() {
     pthread_setname_np(mThreadName.string());
 #endif
 
-    for (;;) {
-        int64_t now_us = 0;
-        const Event* event = NULL;
+#ifdef BUILD_TARGET_ANDROID
+    if (mBackend == BACKEND_TYPE_LOOPER) {
+        //Do something with looper
+        JNIEnv* env = getJNIEnv();
+        mLooperManager = ASDK_NBLooperManager_init(env);
+        ASDK_NBLooperManager_prepare(env, mLooperManager);
 
         {
             NBAutoMutex autoLock(mLock);
+            mEventThreadStartedCondition.signal();
+        }
 
-            if (mStopped) {
-                break;
-            }
+        ASDK_NBLooperManager_loop(env, mLooperManager);
+    } else {
+#endif
+        for (;;) {
+            int64_t now_us = 0;
+            const Event* event = NULL;
 
-            while (list_empty(&mQueue)) {
-                mQueueNotEmptyCondition.wait(mLock);
-            }
+            {
+                NBAutoMutex autoLock(mLock);
 
-            event_id eventID = 0;
-            for (;;) {
-                if (list_empty(&mQueue)) {
-                    // The only event in the queue could have been cancelled
-                    // while we were waiting for its scheduled time.
+                if (mStopped) {
                     break;
                 }
 
-                QueueItem* item = list_first_entry(&mQueue, QueueItem, list);
-                eventID = item->event->eventID();
-
-                now_us = getRealTimeUs();
-                int64_t when_us = item->realtime_us;
-
-                int64_t delay_us;
-                if (when_us < 0 || when_us == INT64_MAX) {
-                    delay_us = 0;
-                } else {
-                    delay_us = when_us - now_us;
+                while (list_empty(&mQueue)) {
+                    mQueueNotEmptyCondition.wait(mLock);
                 }
 
-                if (delay_us <= 0) {
-                    break;
-                }
+                event_id eventID = 0;
+                for (;;) {
+                    if (list_empty(&mQueue)) {
+                        // The only event in the queue could have been cancelled
+                        // while we were waiting for its scheduled time.
+                        break;
+                    }
 
-                static int64_t kMaxTimeoutUs = 10000000ll;  // 10 secs
-                bool timeoutCapped = false;
-                if (delay_us > kMaxTimeoutUs) {
-                    // We'll never block for more than 10 secs, instead
-                    // we will split up the full timeout into chunks of
-                    // 10 secs at a time. This will also avoid overflow
-                    // when converting from us to ns.
-                    delay_us = kMaxTimeoutUs;
-                    timeoutCapped = true;
-                }
+                    QueueItem* item = list_first_entry(&mQueue, QueueItem, list);
+                    eventID = item->event->eventID();
 
-                nb_status_t err = mQueueHeadChangedCondition.waitRelative(
-                        mLock, delay_us * 1000ll);
-
-                if (!timeoutCapped && err == -ETIMEDOUT) {
-                    // We finally hit the time this event is supposed to
-                    // trigger.
                     now_us = getRealTimeUs();
-                    break;
+                    int64_t when_us = item->realtime_us;
+
+                    int64_t delay_us;
+                    if (when_us < 0 || when_us == INT64_MAX) {
+                        delay_us = 0;
+                    } else {
+                        delay_us = when_us - now_us;
+                    }
+
+                    if (delay_us <= 0) {
+                        break;
+                    }
+
+                    static int64_t kMaxTimeoutUs = 10000000ll;  // 10 secs
+                    bool timeoutCapped = false;
+                    if (delay_us > kMaxTimeoutUs) {
+                        // We'll never block for more than 10 secs, instead
+                        // we will split up the full timeout into chunks of
+                        // 10 secs at a time. This will also avoid overflow
+                        // when converting from us to ns.
+                        delay_us = kMaxTimeoutUs;
+                        timeoutCapped = true;
+                    }
+
+                    nb_status_t err = mQueueHeadChangedCondition.waitRelative(
+                            mLock, delay_us * 1000ll);
+
+                    if (!timeoutCapped && err == -ETIMEDOUT) {
+                        // We finally hit the time this event is supposed to
+                        // trigger.
+                        now_us = getRealTimeUs();
+                        break;
+                    }
                 }
+
+                // The event w/ this id may have been cancelled while we're
+                // waiting for its trigger-time, in that case
+                // removeEventFromQueue_l will return NULL.
+                // Otherwise, the QueueItem will be removed
+                // from the queue and the referenced event returned.
+                event = removeEventFromQueue_l(eventID);
             }
 
-            // The event w/ this id may have been cancelled while we're
-            // waiting for its trigger-time, in that case
-            // removeEventFromQueue_l will return NULL.
-            // Otherwise, the QueueItem will be removed
-            // from the queue and the referenced event returned.
-            event = removeEventFromQueue_l(eventID);
+            if (event != NULL) {
+                // Fire event with the lock NOT held.
+                event->fire(this, now_us);
+            }
         }
 
-        if (event != NULL) {
-            // Fire event with the lock NOT held.
-            event->fire(this, now_us);
-        }
-    }
+#ifdef BUILD_TARGET_ANDROID
+    }   // End if (mBackend == BACKEND_TYPE_LOOPER)
+#endif
 
 }
 

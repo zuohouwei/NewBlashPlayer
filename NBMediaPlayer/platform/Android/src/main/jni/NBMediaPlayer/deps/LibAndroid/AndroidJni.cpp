@@ -15,6 +15,8 @@
 #include "AndroidSurfaceTexture.h"
 #include "AndroidSurface.h"
 
+#include "Custom/NBLooperManager.h"
+
 #include "JNIUtils.h"
 
 #include <sys/system_properties.h>
@@ -72,8 +74,8 @@ int LibAndroid_OnLoad(JNIEnv* env) {
     retval = ASDK_Surface__loadClass(env);
     JNI_CHECK_RET(retval == 0, env, NULL, NULL, -1);
 
-    // retval = ASDK_TDOnFrameAvailableListener__loadClass(env);
-    // JNI_CHECK_RET(retval == 0, env, NULL, NULL, -1);
+    retval = ASDK_NBLooperManager__loadClass(env);
+    JNI_CHECK_RET(retval == 0, env, NULL, NULL, -1);
 
     return 0;
 }

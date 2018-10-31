@@ -24,6 +24,7 @@ set(SRC_SET
         AndroidString.cpp
         AndroidSurface.cpp
         AndroidSurfaceTexture.cpp
+        Custom/NBLooperManager.cpp
         JNIUtils.cpp)
 
 add_library(LibAndroid ${SRC_SET})

@@ -118,6 +118,7 @@ set(SRC_SET
         ${NBMEIDAPLAYER_ROOT}/src/renderer/NBGLVideoRenderer.cpp
         ${NBMEIDAPLAYER_ROOT}/src/renderer/NBGLShaderUtils.cpp
         ${NBMEIDAPLAYER_ROOT}/src/renderer/NBGLYUV420PRenderer.cpp
+        ${NBMEIDAPLAYER_ROOT}/src/renderer/NBGLFrameBuffer.cpp
         ${SRC_DOWNLOAD_ENGINE}
         ${SRC_CUSTOM_FFMPEG}
         )
