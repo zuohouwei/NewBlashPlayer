@@ -21,6 +21,12 @@
 
 #include "stdio.h"
 
+
+#include <NBLog.h>
+#include "NBFoundation.h"
+
+#define LOG_TAG "NBGLVideoRenderer"
+
 float NBGLVideoRenderer::VideoTextureCoord[8] = {
         0.0f,
         1.0f,
@@ -135,7 +141,14 @@ void NBGLVideoRenderer::setVideoOutput(NBRendererTarget* vo) {
 }
 
 nb_status_t NBGLVideoRenderer::start(NBMetaData* metaData) {
-    prepareRendererCtx(mVideoOutput);
+    const char* decoderComponet = NULL;
+    metaData->findCString(kKeyDecoderComponent, &decoderComponet);
+
+    if (decoderComponet != NULL && strcmp(decoderComponet, MEDIA_DECODE_COMPONENT_MEDIACODEC) == 0) {
+        prepareRendererCtx(mVideoOutput, true);
+    } else {
+        prepareRendererCtx(mVideoOutput, false);
+    }
     
     if (mVideoOutput->fListener != NULL) {
         int width = 0;
@@ -157,7 +170,7 @@ nb_status_t NBGLVideoRenderer::stop() {
 }
 
 nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
-    NBRenderInfo info;
+    NBRenderInfo info = {0};
 
     preRender(mVideoOutput, &info);
 
@@ -177,7 +190,7 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
     }
 
     postRender(mVideoOutput);
-    
+
     if (mVideoOutput->fListener != NULL) {
         mVideoOutput->fListener->onGLTextureAvailable(mGLFrameBuffer.getNativeTextureId());
     }

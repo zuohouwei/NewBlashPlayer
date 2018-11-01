@@ -536,7 +536,7 @@ nb_status_t NBMediaPlayer::initVideoDecoder(uint32_t flags) {
     NBLOG_INFO(LOG_TAG, "mVideoSource is : %p", mVideoSource);
 
     // videooutput params is surface
-    mVideoSource = NBMediaDecoder::Create(mVideoTrack->getFormat(), mVideoTrack, mVideoOutput->params);
+    mVideoSource = NBMediaDecoder::Create(mVideoTrack->getFormat(), mVideoTrack, getRendererCtx(mVideoOutput));
     if (mVideoSource != NULL) {
         err = mVideoSource->start();
     }

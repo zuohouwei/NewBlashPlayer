@@ -130,11 +130,12 @@ JNIEXPORT void JNICALL NBAVPlayer_setAudioTrack(JNIEnv *env, jobject thiz, jobje
 
 }
 
-JNIEXPORT void JNICALL NBAVPlayer_setSurface(JNIEnv *env, jobject thiz, jobject jParamSurface) {
+JNIEXPORT void JNICALL NBAVPlayer_setSurfaceView(JNIEnv *env, jobject thiz, jobject jParamSurface) {
     NBNativeContext* nativeContext = getMediaPlayer(env, thiz);
     if (nativeContext != NULL) {
         nativeContext->surface = env->NewGlobalRef(jParamSurface);
         nativeContext->rendererTarget.params = nativeContext->surface;
+        nativeContext->rendererTarget.fListener = NULL;
         nativeContext->mp->setVideoOutput(&nativeContext->rendererTarget);
     }
 }
@@ -423,7 +424,7 @@ static JNINativeMethod gMethods[] = {
     },
     {"setDataSource",                   "(Ljava/io/FileDescriptor;JJ)V",                  (void *)NBAVPlayer_setDataSourceWithId},
     {"_setAudioTrack",                  "(Landroid/media/AudioTrack;)V",                  (void *)NBAVPlayer_setAudioTrack},
-    {"_setVideoSurface",                "(Landroid/view/Surface;)V",                      (void *)NBAVPlayer_setSurface},
+    {"_setVideoSurface",                "(Landroid/view/SurfaceView;)V",                  (void *)NBAVPlayer_setSurfaceView},
     {"_start",                          "()V",                                            (void *)NBAVPlayer_start},
     {"_stop",                           "()V",                                            (void *)NBAVPlayer_stop},
     {"_pause",                          "()V",                                            (void *)NBAVPlayer_pause},

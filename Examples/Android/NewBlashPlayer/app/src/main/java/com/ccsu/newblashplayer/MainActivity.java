@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.ccsu.nbmediaplayer.NBAVPlayer;
+import com.ccsu.nbmediaplayer.NBGenericGLView;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private NBAVPlayer mMediaPlayer = null;
-    private SurfaceView mPlayerSuraceView = null;
+    private NBGenericGLView mPlayerSuraceView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mMediaPlayer.setSurface(surfaceHolder.getSurface());
+
+        mPlayerSuraceView.setPlayer(mMediaPlayer);
+//        mMediaPlayer.setSurface(surfaceHolder.getSurface());
         mMediaPlayer.prepareAsync();
     }
 

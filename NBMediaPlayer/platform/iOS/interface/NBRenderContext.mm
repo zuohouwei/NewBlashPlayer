@@ -13,7 +13,7 @@ void* getRendererCtx(NBRendererTarget* target) {
     return [(__bridge NSObject<NBRenderProtocol>*)target->params getRendererCtx];
 }
 
-nb_status_t prepareRendererCtx(NBRendererTarget* target) {
+nb_status_t prepareRendererCtx(NBRendererTarget* target, bool dummy) {
     return [(__bridge NSObject<NBRenderProtocol>*)target->params prepareRendererCtx];
 }
 

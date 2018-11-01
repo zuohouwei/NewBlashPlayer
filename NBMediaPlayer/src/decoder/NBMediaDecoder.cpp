@@ -52,7 +52,7 @@ NBMediaSource* NBMediaDecoder::Create(NBMetaData* metaData, NBMediaSource* media
         if (flags & NB_DECODER_FLAG_AUTO_SELECT) {
         // autoselect decoder mode
 #if BUILD_TARGET_ANDROID
-            // current only support h264
+            //current only support h264
             if (videoCodecPar->codec_id == AV_CODEC_ID_H264) {
                 ret = new NBMediaCodecVDecoder(mediaTrack, window);
             } else {

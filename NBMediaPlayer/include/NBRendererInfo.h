@@ -35,15 +35,16 @@ typedef struct NBRendererTarget {
 typedef struct NBRendererTarget {
     void* params;
     NBFrameAvailableListener* fListener;
-    EGLDisplay _display;
-    EGLSurface _surface;
-    EGLContext _context;
-    ANativeWindow *window;
+    void* opaque;
+//    EGLDisplay _display;
+//    EGLSurface _surface;
+//    EGLContext _context;
+//    ANativeWindow *window;
 } NBRendererTarget;
 #endif
 
 void* getRendererCtx(NBRendererTarget* target);
-nb_status_t prepareRendererCtx(NBRendererTarget* target);
+nb_status_t prepareRendererCtx(NBRendererTarget* target, bool mediacodec);
 void destroyRendererCtx(NBRendererTarget* target);
 nb_status_t preRender(NBRendererTarget* target, NBRenderInfo* info);
 nb_status_t postRender(NBRendererTarget* target);

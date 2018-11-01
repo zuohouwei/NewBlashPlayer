@@ -25,7 +25,7 @@ NBMediaCodecVRenderer::~NBMediaCodecVRenderer() {
 
 }
 
-nb_status_t NBMediaCodecVRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
+nb_status_t NBMediaCodecVRenderer::displayFrameImpl(NBMediaBuffer* mediaBuffer, int tgtWidth, int tgtHeight) {
 //    NBLOG_INFO(LOG_TAG, "display frame everyframe");
     AVFrame* frame = (AVFrame*)mediaBuffer->data();
 
@@ -39,11 +39,13 @@ void NBMediaCodecVRenderer::invalidate() {
 }
 
 nb_status_t NBMediaCodecVRenderer::start(NBMetaData* metaData) {
-    //do nothing at all
+    //call base start first
+    NBGLVideoRenderer::start(metaData);
     return OK;
 }
 
 nb_status_t NBMediaCodecVRenderer::stop() {
-    //do nothing at all
+    //call base stop first
+    NBGLVideoRenderer::stop();
     return OK;
 }

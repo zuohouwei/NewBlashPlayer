@@ -5,15 +5,15 @@
 #ifndef NBMEDIACODECVRENDERER_H
 #define NBMEDIACODECVRENDERER_H
 
-#include "NBVideoRenderer.h"
+#include "NBGLVideoRenderer.h"
 
-class NBMediaCodecVRenderer : public NBVideoRenderer {
+class NBMediaCodecVRenderer : public NBGLVideoRenderer {
 public:
     NBMediaCodecVRenderer();
     ~NBMediaCodecVRenderer();
 
 public:
-    virtual nb_status_t displayFrame(NBMediaBuffer* mediaBuffer);
+    virtual nb_status_t displayFrameImpl(NBMediaBuffer* mediaBuffer, int tgtWidth, int tgtHeight);
 
     virtual void invalidate();
 

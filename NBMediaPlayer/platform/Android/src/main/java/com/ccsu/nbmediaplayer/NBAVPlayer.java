@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -253,7 +254,7 @@ public class NBAVPlayer {
         setDataSource(fd, 0L, 576460752303423487L);
     }
 
-    public void setSurface(Surface surface) {
+    /*public*/ void setSurface(SurfaceView surface) {
         _setVideoSurface(surface);
     }
 
@@ -545,7 +546,7 @@ public class NBAVPlayer {
     /**private native method*/
     private native void _setAudioTrack(AudioTrack paramAudioTrack);
 
-    private native void _setVideoSurface(Surface paramSurface);
+    private native void _setVideoSurface(SurfaceView paramSurface);
 
     private native void _start() throws IllegalStateException;
 
