@@ -23,7 +23,7 @@
 
 
 #include <NBLog.h>
-#include "NBFoundation.h"
+#include "foundation/NBFoundation.h"
 
 #define LOG_TAG "NBGLVideoRenderer"
 

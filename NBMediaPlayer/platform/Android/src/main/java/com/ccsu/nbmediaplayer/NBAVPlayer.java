@@ -254,7 +254,7 @@ public class NBAVPlayer {
         setDataSource(fd, 0L, 576460752303423487L);
     }
 
-    /*public*/ void setSurface(SurfaceView surface) {
+    public void setSurface(SurfaceView surface) {
         _setVideoSurface(surface);
     }
 

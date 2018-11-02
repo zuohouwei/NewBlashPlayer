@@ -4,10 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import com.ccsu.nbmediaplayer.NBAVPlayer;
-import com.ccsu.nbmediaplayer.NBGenericGLView;
+import com.ccsu.nbmediaplayer.view.NBGenericGLView;
 
 import java.io.IOException;
 

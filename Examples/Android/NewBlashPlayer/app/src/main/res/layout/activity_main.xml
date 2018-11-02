@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.ccsu.nbmediaplayer.NBGenericGLView
+    <com.ccsu.nbmediaplayer.view.NBGenericGLView
         android:id="@+id/player_surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
