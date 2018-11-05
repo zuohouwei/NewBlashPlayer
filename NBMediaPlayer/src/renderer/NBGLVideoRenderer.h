@@ -82,6 +82,8 @@ protected:
     
     // the render texture object
     NBGLFrameBuffer mGLFrameBuffer;
+
+    bool mIsMediaCodec;
 };
 
 #endif //NBGLVIDEORENDERER_H

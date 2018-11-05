@@ -22,7 +22,8 @@ struct fields_t {
 };
 static fields_t fields;
 
-static const char *const kClassPathName = "com/ccsu/nbmediaplayer/NBAVPlayer";
+static const char* const kClassPathName = "com/ccsu/nbmediaplayer/NBAVPlayer";
+static const char* const kEnhancedGLViewClassPathName = "com/ccsu/nbmediaplayer/view/NBEnhancedGLView";
 
 class MediaPlayerListener : public INBMediaPlayerLister {
 public:
@@ -130,12 +131,39 @@ JNIEXPORT void JNICALL NBAVPlayer_setAudioTrack(JNIEnv *env, jobject thiz, jobje
 
 }
 
+class NBEnhancedFrameListener: public NBFrameAvailableListener {
+public:
+    NBEnhancedFrameListener(jobject enhancedGLView, jmethodID onTextureAvailable) {
+        mEnhancedGLView = enhancedGLView;
+        mOnTextureAvailable = onTextureAvailable;
+    }
+
+public:
+    virtual void onGLTextureAvailable(int texName) {
+        getJNIEnv()->CallVoidMethod(mEnhancedGLView, mOnTextureAvailable, texName);
+    }
+private:
+    jobject mEnhancedGLView;
+    jmethodID mOnTextureAvailable;
+};
+
 JNIEXPORT void JNICALL NBAVPlayer_setSurfaceView(JNIEnv *env, jobject thiz, jobject jParamSurface) {
     NBNativeContext* nativeContext = getMediaPlayer(env, thiz);
     if (nativeContext != NULL) {
         nativeContext->surface = env->NewGlobalRef(jParamSurface);
         nativeContext->rendererTarget.params = nativeContext->surface;
-        nativeContext->rendererTarget.fListener = NULL;
+
+        jclass enhancedClass = env->FindClass(kEnhancedGLViewClassPathName);
+
+        if(env->IsInstanceOf(nativeContext->surface, enhancedClass)) {
+
+            jmethodID onTextureAvailable = env->GetMethodID(enhancedClass, "nativeTextureAvailable", "(I)V");
+
+            nativeContext->rendererTarget.fListener = new NBEnhancedFrameListener(nativeContext->surface, onTextureAvailable);
+        } else {
+            nativeContext->rendererTarget.fListener = NULL;
+        }
+
         nativeContext->mp->setVideoOutput(&nativeContext->rendererTarget);
     }
 }

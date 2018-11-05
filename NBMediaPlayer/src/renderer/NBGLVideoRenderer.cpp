@@ -127,7 +127,8 @@ NBGLVideoRenderer::NBGLVideoRenderer()
     :m0UnpackAlignBytes(1)
     ,m1UnpackAlignBytes(1)
     ,m2UnpackAlignBytes(1)
-    ,mInited(false) {
+    ,mInited(false)
+    ,mIsMediaCodec(false) {
     //Default There is no rotate
 //    mat4fLoadPerspective(0.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
@@ -145,12 +146,14 @@ nb_status_t NBGLVideoRenderer::start(NBMetaData* metaData) {
     metaData->findCString(kKeyDecoderComponent, &decoderComponet);
 
     if (decoderComponet != NULL && strcmp(decoderComponet, MEDIA_DECODE_COMPONENT_MEDIACODEC) == 0) {
-        prepareRendererCtx(mVideoOutput, true);
+        mIsMediaCodec = true;
     } else {
-        prepareRendererCtx(mVideoOutput, false);
+        mIsMediaCodec = false;
     }
+
+    prepareRendererCtx(mVideoOutput, mIsMediaCodec);
     
-    if (mVideoOutput->fListener != NULL) {
+    if (!mIsMediaCodec && mVideoOutput->fListener != NULL) {
         int width = 0;
         int height = 0;
         metaData->findInt32(kKeyWidth, &width);
@@ -162,7 +165,7 @@ nb_status_t NBGLVideoRenderer::start(NBMetaData* metaData) {
 }
 
 nb_status_t NBGLVideoRenderer::stop() {
-    if (mVideoOutput->fListener != NULL) {
+    if (!mIsMediaCodec && mVideoOutput->fListener != NULL) {
         mGLFrameBuffer.unsetupFBO();
     }
     destroyRendererCtx(mVideoOutput);
@@ -175,7 +178,9 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
     preRender(mVideoOutput, &info);
 
     if (mVideoOutput->fListener != NULL) {
-        mGLFrameBuffer.bind();
+        if (!mIsMediaCodec) {
+            mGLFrameBuffer.bind();
+        }
     } else {
         glViewport(info.x, info.y, info.width, info.height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,7 +188,7 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
 
     displayFrameImpl(mediaBuffer, info.width, info.height);
     
-    if (mVideoOutput->fListener != NULL) {
+    if (!mIsMediaCodec && mVideoOutput->fListener != NULL) {
         // must call glFlush at end of draw
         glFlush();
         mGLFrameBuffer.unbind();
@@ -191,7 +196,7 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
 
     postRender(mVideoOutput);
 
-    if (mVideoOutput->fListener != NULL) {
+    if (!mIsMediaCodec && mVideoOutput->fListener != NULL) {
         mVideoOutput->fListener->onGLTextureAvailable(mGLFrameBuffer.getNativeTextureId());
     }
 

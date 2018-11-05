@@ -1311,6 +1311,12 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
         }
     }
 
+    public void nativeTextureAvailable(int texName) {
+        if (mTextureListener != null) {
+            mTextureListener.onSurfaceTextureAvailable(texName, false);
+        }
+    }
+
     boolean mIsMediaCodec = false;
     private NBExternalTextureHelper mExternalTextureHelper = null;
     private Surface mExternalSurface = null;
