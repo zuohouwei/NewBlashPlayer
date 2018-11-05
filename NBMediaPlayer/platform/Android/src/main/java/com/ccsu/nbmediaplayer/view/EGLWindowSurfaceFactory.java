@@ -17,5 +17,10 @@ public interface EGLWindowSurfaceFactory {
      */
     EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display, EGLConfig config,
                                    Object nativeWindow);
+
+    EGLSurface createPBufferSurface(EGL10 egl, EGLDisplay display, EGLConfig config, int width, int height);
+
     void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface);
+
+    void destroyPBufferSurface(EGL10 egl, EGLDisplay display, EGLSurface surface);
 }

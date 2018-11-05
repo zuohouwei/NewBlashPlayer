@@ -74,6 +74,83 @@ class EglHelper {
         mEglSurface = null;
     }
 
+    public void startShared(int clientVersion) {
+        NBBaseGLView view = mGLSurfaceViewWeakRef.get();
+        if (view == null) {
+            mEglSharedContext = null;
+        } else {
+            mEglSharedContext = view.mEGLContextFactory.createSharedContext(mEgl, mEglContext, mEglDisplay, mEglConfig, clientVersion);
+        }
+        if (mEglSharedContext == null || mEglSharedContext == EGL10.EGL_NO_CONTEXT) {
+            mEglSharedContext = null;
+            throwEglException("createContext");
+        }
+        if (NBBaseGLView.LOG_EGL) {
+            Log.w("EglHelper", "createContext " + mEglSharedContext + " tid=" + Thread.currentThread().getId());
+        }
+
+        mEglSharedSurface = null;
+    }
+
+    public boolean createSharedSurface() {
+        if (NBBaseGLView.LOG_EGL) {
+            Log.w("EglHelper", "createSurface()  tid=" + Thread.currentThread().getId());
+        }
+        /*
+         * Check preconditions.
+         */
+        if (mEgl == null) {
+            throw new RuntimeException("egl not initialized");
+        }
+        if (mEglDisplay == null) {
+            throw new RuntimeException("eglDisplay not initialized");
+        }
+        if (mEglConfig == null) {
+            throw new RuntimeException("mEglConfig not initialized");
+        }
+
+
+        /*
+         *  The window size has changed, so we need to create a new
+         *  surface.
+         */
+        destroySharedSurface();
+
+        /*
+         * Create an EGL surface we can render into.
+         */
+        NBBaseGLView view = mGLSurfaceViewWeakRef.get();
+        if (view != null) {
+            mEglSharedSurface = view.mEGLWindowSurfaceFactory.createPBufferSurface(mEgl,
+                    mEglDisplay, mEglConfig, view.getWidth(), view.getHeight());
+        } else {
+            mEglSharedSurface = null;
+        }
+
+        if (mEglSharedSurface == null || mEglSharedSurface == EGL10.EGL_NO_SURFACE) {
+            int error = mEgl.eglGetError();
+            if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
+                Log.e("EglHelper", "createWindowSurface returned EGL_BAD_NATIVE_WINDOW.");
+            }
+            return false;
+        }
+
+        /*
+         * Before we can issue GL commands, we need to make sure
+         * the context is current and bound to a surface.
+         */
+        if (!mEgl.eglMakeCurrent(mEglDisplay, mEglSharedSurface, mEglSharedSurface, mEglSharedContext)) {
+            /*
+             * Could not make the context current, probably because the underlying
+             * SurfaceView surface has been destroyed.
+             */
+            logEglErrorAsWarning("EGLHelper", "eglMakeCurrent", mEgl.eglGetError());
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Create an egl surface for the current SurfaceHolder surface. If a surface
      * already exists, destroy it before creating the new surface.
@@ -177,6 +254,13 @@ class EglHelper {
         return EGL10.EGL_SUCCESS;
     }
 
+    public void destroySharedSurface() {
+        if (NBBaseGLView.LOG_EGL) {
+            Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
+        }
+        destroySharedSurfaceImp();
+    }
+
     public void destroySurface() {
         if (NBBaseGLView.LOG_EGL) {
             Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
@@ -194,6 +278,19 @@ class EglHelper {
                 view.mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
             }
             mEglSurface = null;
+        }
+    }
+
+    private void destroySharedSurfaceImp() {
+        if (mEglSharedSurface != null && mEglSharedSurface != EGL10.EGL_NO_SURFACE) {
+            mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_CONTEXT);
+            NBBaseGLView view = mGLSurfaceViewWeakRef.get();
+            if (view != null) {
+                view.mEGLWindowSurfaceFactory.destroyPBufferSurface(mEgl, mEglDisplay, mEglSharedSurface);
+            }
+            mEglSharedSurface = null;
         }
     }
 
@@ -242,5 +339,9 @@ class EglHelper {
     EGLSurface mEglSurface;
     EGLConfig mEglConfig;
     EGLContext mEglContext;
+
+    // the shared context
+    EGLContext mEglSharedContext;
+    EGLSurface mEglSharedSurface;
 
 }

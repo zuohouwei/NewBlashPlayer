@@ -178,8 +178,8 @@ nb_status_t NBGLVideoRenderer::displayFrame(NBMediaBuffer* mediaBuffer) {
         mGLFrameBuffer.bind();
     } else {
         glViewport(info.x, info.y, info.width, info.height);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     displayFrameImpl(mediaBuffer, info.width, info.height);
     

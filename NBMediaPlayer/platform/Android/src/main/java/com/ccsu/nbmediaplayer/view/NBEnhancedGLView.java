@@ -24,12 +24,18 @@ import android.opengl.GLDebugHelper;
 //import android.os.Trace;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.ccsu.nbmediaplayer.NBAVPlayer;
+import com.ccsu.nbmediaplayer.helper.NBExternalTextureHelper;
 
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGL11;
@@ -163,10 +169,12 @@ import javax.microedition.khronos.opengles.GL10;
  * </pre>
  *
  */
-public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Callback2 {
+public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Callback2, NBExternalTextureHelper.SurfaceTextureListener {
     private final static String TAG = "NBEnhancedGLView";
 
     private final static String TRACE_TAG_VIEW = "TaceTAGView";
+
+    private WeakReference<NBAVPlayer> mAVPlayer = null;
 
     /**
      * The renderer only renders
@@ -229,6 +237,10 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
         // setType is not needed for SDK 2.0 or newer. Uncomment this
         // statement if back-porting this code to older SDKs.
         // holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+
+        mExternalTextureHelper = new NBExternalTextureHelper();
+        mExternalTextureHelper.setTextureListener(this);
+        mRendererLock = new ReentrantLock();
     }
 
 //    /**
@@ -296,6 +308,10 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
         mGLThread.start();
     }
 
+    public void setSurfaceTextureListener(SurfaceTextureListener textureListener) {
+        this.mTextureListener = textureListener;
+    }
+
     /**
      * Request exit the gl render loop.
      */
@@ -304,6 +320,13 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
             // GLThread may still be running if this view was never
             // attached to a window.
             mGLThread.requestExitAndWait();
+        }
+    }
+
+    public void setPlayer(NBAVPlayer avPlayer) {
+        mAVPlayer = new WeakReference<>(avPlayer);
+        if (mAVPlayer.get() != null) {
+            mAVPlayer.get().setSurface(this);
         }
     }
 
@@ -583,6 +606,10 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
          * test if the interface supports GL11 or higher interfaces.
          */
         void onSurfaceDestroy();
+    }
+
+    public interface SurfaceTextureListener {
+        void onSurfaceTextureAvailable(int texName, boolean isExternal);
     }
 
     /**
@@ -921,7 +948,11 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
                             try {
 //                                Trace.traceBegin(Trace.TRACE_TAG_VIEW, "onDrawFrame");
                                 Log.v(TAG, TRACE_TAG_VIEW + "begin onDrawFrame");
+                                // lock for renderer
+                                view.mRendererLock.lock();
                                 view.mRenderer.onDrawFrame(gl);
+                                // unlock for renderer
+                                view.mRendererLock.unlock();
                                 if (finishDrawingRunnable != null) {
                                     finishDrawingRunnable.run();
                                     finishDrawingRunnable = null;
@@ -1179,6 +1210,10 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
             }
         }
 
+        public EglHelper getEglHelper() {
+            return mEglHelper;
+        }
+
         // Once the thread is started, all accesses to the following member
         // variables are protected by the sGLThreadManager monitor
         private boolean mShouldExit;
@@ -1250,7 +1285,96 @@ public class NBEnhancedGLView extends NBBaseGLView implements SurfaceHolder.Call
             new WeakReference<>(this);
     private GLThread mGLThread;
     private Renderer mRenderer;
+    private SurfaceTextureListener mTextureListener;
     private boolean mDetached;
 
 //    private boolean mPreserveEGLContextOnPause;
+
+    // ======== nvabplayer support begin ========== //
+
+    @Override
+    public int texturePreRender() {
+        mRendererLock.lock();
+        return 0;
+    }
+
+    @Override
+    public int texturePostRender() {
+        mRendererLock.unlock();
+        return 0;
+    }
+
+    @Override
+    public void textureAvailable(int texName) {
+        if (mTextureListener != null) {
+            mTextureListener.onSurfaceTextureAvailable(texName, true);
+        }
+    }
+
+    boolean mIsMediaCodec = false;
+    private NBExternalTextureHelper mExternalTextureHelper = null;
+    private Surface mExternalSurface = null;
+    private Lock mRendererLock = null;
+
+    private int prepareRendererCtx(boolean mediacodec) {
+        mIsMediaCodec = mediacodec;
+
+        Log.d(TAG, "prepareRendererCtx mIsMediaCodec : " + mIsMediaCodec);
+
+        Log.i(TAG, "prepareRendererCtx thread id is : " + Thread.currentThread().getId());
+
+        return 0;
+    }
+
+    private void destroyRendererCtx() {
+        Log.d(TAG, "destroyRendererCtx");
+
+        if (mIsMediaCodec) {
+            return ;
+        }
+
+
+
+    }
+
+    private int preRender(int[] screenInfo) {
+//        Log.d(TAG, "preRender");
+
+        screenInfo[0] = 0;
+        screenInfo[1] = 0;
+        screenInfo[2] = this.getWidth();
+        screenInfo[3] = this.getHeight();
+
+        if (mIsMediaCodec) {
+            return 0;
+        }
+
+        mRendererLock.lock();
+
+        return 0;
+    }
+
+    private int postRender() {
+        if (mIsMediaCodec) {
+            return 0;
+        }
+
+        mRendererLock.unlock();
+        return 0;
+    }
+
+    private Surface getRendererCtx() {
+        Log.d(TAG, "getRendererCtx");
+
+        EglHelper eglHelper = mGLThread.getEglHelper();
+        eglHelper.startShared(mEGLContextClientVersion);
+
+        eglHelper.createSharedSurface();
+
+        mExternalSurface = new Surface(mExternalTextureHelper.genSurfaceTexture());
+
+        return mExternalSurface;
+    }
+
+    // ======== nvabplayer support end ========== //
 }

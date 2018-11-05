@@ -11,7 +11,7 @@ import javax.microedition.khronos.opengles.GL;
 
 abstract class NBBaseGLView extends SurfaceView {
     public final static boolean LOG_ATTACH_DETACH = false;
-    public final static boolean LOG_THREADS = false;
+    public final static boolean LOG_THREADS = true;
     public final static boolean LOG_PAUSE_RESUME = false;
     public final static boolean LOG_SURFACE = false;
     public final static boolean LOG_RENDERER = false;

@@ -12,6 +12,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
  * {@link NBEnhancedGLView#setEGLContextFactory(EGLContextFactory)}
  */
 public interface EGLContextFactory {
-    EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig, int clientVersion);
+    EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig config, int clientVersion);
+    EGLContext createSharedContext(EGL10 egl, EGLContext sharedContext, EGLDisplay display, EGLConfig config, int clientVersion);
     void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context);
 }

@@ -18,6 +18,14 @@ class DefaultContextFactory implements EGLContextFactory {
                 clientVersion != 0 ? attrib_list : null);
     }
 
+    public EGLContext createSharedContext(EGL10 egl, EGLContext sharedContext, EGLDisplay display, EGLConfig config, int clientVersion) {
+        int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, clientVersion,
+                EGL10.EGL_NONE };
+
+        return egl.eglCreateContext(display, config, sharedContext,
+                clientVersion != 0 ? attrib_list : null);
+    }
+
     public void destroyContext(EGL10 egl, EGLDisplay display,
                                EGLContext context) {
         if (!egl.eglDestroyContext(display, context)) {

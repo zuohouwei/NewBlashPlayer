@@ -1,4 +1,4 @@
-package com.ccsu.newblashplayer;
+package com.ccsu.newblashplayer.generic;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.ccsu.nbmediaplayer.NBAVPlayer;
 import com.ccsu.nbmediaplayer.view.NBGenericGLView;
+import com.ccsu.newblashplayer.R;
 
 import java.io.IOException;
 
